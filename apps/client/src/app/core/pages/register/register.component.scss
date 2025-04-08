@@ -1,0 +1,76 @@
+.register-container {
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+
+  img:nth-child(1) {
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 200px;
+    height: 200px;
+    animation: breathe infinite 5s;
+  }
+  img:nth-child(2) {
+    position: absolute;
+    bottom: 100px;
+    left: -100px;
+    width: 200px;
+    height: 200px;
+    animation: breathe infinite 7s;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      padding: 20dvh 30px;
+      color: #333;
+
+      h1 {
+        font-weight: 900;
+        font-size: 45px;
+        margin-bottom: 0px;
+      }
+      p {
+        color: #838383;
+        font-weight: 500;
+        font-size: 16px;
+      }
+      input {
+        margin: 5px 0px;
+      }
+      button {
+        width: 150px;
+        align-self: flex-end;
+        margin-top: 10px;
+      }
+    }
+  }
+  > p {
+    color: #838383;
+    font-weight: 500;
+    font-size: 15px;
+    position: absolute;
+    bottom: 30px;
+
+    a {
+      cursor: pointer;
+      color: var(--PrimaryColor);
+    }
+  }
+}

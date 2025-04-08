@@ -1,1 +1,19 @@
-<p>register works!</p>
+<div class="register-container">
+  <img src="circle.svg" />
+  <img src="circle.svg" />
+  <div class="content">
+    <form>
+      <h1>Sign up</h1>
+      <p>Please sign up in to continue.</p>
+      <input placeholder="name" class="default-input" />
+      <input placeholder="email" class="default-input" />
+      <input placeholder="password" class="default-input" />
+      <input placeholder="confirm password" class="default-input" />
+      <button class="default-button">sign up</button>
+    </form>
+  </div>
+  <p>
+    Already have an account ?
+    <a (click)="router.navigateByUrl('/login')">Login.</a>
+  </p>
+</div>
