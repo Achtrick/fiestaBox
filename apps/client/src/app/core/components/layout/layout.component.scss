@@ -7,13 +7,12 @@
     padding: 60px 0px;
   }
   .layout-toolbar {
-    width: calc(100% - 20px);
+    width: 100%;
     height: 70px;
     position: fixed;
-    bottom: 10px;
-    left: 10px;
-    border-radius: 2rem;
-    background-color: transparent;
+    bottom: -1px;
+    left: 0px;
+    background-color: rgb(255 255 255 / 34%);
     backdrop-filter: blur(25px);
     color: #000;
     display: flex;

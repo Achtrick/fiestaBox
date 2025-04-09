@@ -14,7 +14,7 @@
       @for (event of events; track $index) {
       <div class="card" [routerLink]="['/albums/', event.Id]">
         <img [src]="event.CoverPhoto" />
-        <div class="info">
+        <div class="overlay">
           <p>{{ event.Name }}</p>
           <p>{{ event.Date }}</p>
         </div>

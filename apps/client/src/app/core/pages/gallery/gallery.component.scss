@@ -1,0 +1,8 @@
+.gallery-container {
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, calc(50vw - 25px));
+    grid-auto-rows: calc(50vw - 25px);
+    gap: 10px;
+  }
+}
