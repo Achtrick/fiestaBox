@@ -1,2 +1,14 @@
-<ng-content></ng-content>
-<p>layout works!</p>
+<div class="layout-container">
+  <div class="layout-content">
+    <ng-content></ng-content>
+  </div>
+  <div class="layout-toolbar">
+    <a routerLink="/"><i class="fa-solid fa-calendar-day"></i></a>
+    <a *ngIf="eventId" [routerLink]="['/albums/', eventId]">
+      <i class="fa-solid fa-folder"></i>
+    </a>
+    <a *ngIf="albumId" [routerLink]="['/albums/', albumId]"
+      ><i class="fa-solid fa-image"></i
+    ></a>
+  </div>
+</div>
