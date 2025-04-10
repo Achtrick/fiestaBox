@@ -45,7 +45,7 @@
   }
   .content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
     gap: 30px;
 
     .card {
@@ -89,7 +89,13 @@
 @media (max-width: 800px) {
   .events-container {
     .content {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
+  }
+}
+
+@media (orientation: landscape) {
+  .card {
+    min-height: 35dvh;
   }
 }
