@@ -38,6 +38,8 @@ export class PopupComponent implements OnInit, OnChanges {
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() OnHiding: EventEmitter<void> = new EventEmitter<void>();
 
+  public ActionButton = ActionButton;
+
   private _visible: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _animate: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -60,6 +62,9 @@ export class PopupComponent implements OnInit, OnChanges {
       this.open();
     } else {
       this.close();
+    }
+    if (changes['actionButtons']) {
+      this.setContentStyle();
     }
   }
 
@@ -173,13 +178,21 @@ export class PopupComponent implements OnInit, OnChanges {
 
 export class ActionButton {
   text: string = '';
-  color?: string = '#000000';
+  color?: string = '#ffffff';
+  backgroundColor?: string = '#000000';
   width?: string = '';
   height?: string = '';
-  inversed?: boolean = false;
   disabled?: boolean = false;
-  loading?: boolean = false;
   action: (() => void) | (() => Promise<void>) = () => {};
+
+  public static getStyles(button: ActionButton) {
+    return {
+      color: button.color,
+      backgroundColor: button.backgroundColor,
+      width: button.width,
+      height: button.height,
+    };
+  }
 }
 
 export enum PopupAnimation {

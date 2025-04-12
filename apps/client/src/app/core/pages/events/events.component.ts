@@ -1,21 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Action } from '../../../models/Action.model';
 import { Event, EventType } from '../../../models/Event.model';
+import { EventFormComponent } from '../../components/events/event-form.component';
 import {
+  ActionButton,
   PopupAnimation,
   PopupComponent,
 } from '../../components/popup/popup.component';
 
 @Component({
   selector: 'events',
-  imports: [CommonModule, RouterLink, PopupComponent],
+  imports: [CommonModule, RouterLink, PopupComponent, EventFormComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
-  public controlAction: WritableSignal<boolean> = signal(false);
-  public PopupAnimation = PopupAnimation;
   public events: Event[] = [
     {
       Id: '1',
@@ -114,21 +115,53 @@ export class EventsComponent {
       Type: EventType.Platinium,
     },
   ];
+  public Action = Action;
+  public action: WritableSignal<Action> = signal(null);
+  public actionTitle: WritableSignal<string> = signal('');
+  public PopupAnimation = PopupAnimation;
+  public actionButtons: WritableSignal<ActionButton[]> = signal([]);
 
   constructor() {}
 
+  public clearAction = (): void => {
+    this.actionButtons.set([]);
+    this.action.set(null);
+  };
+
   public addEvent(e: MouseEvent): void {
     e.stopPropagation();
-    this.controlAction.set(true);
+    this.action.set(Action.ADD);
+    this.actionTitle.set('Create a new event');
+    this.actionButtons.set([
+      {
+        text: 'cancel',
+        width: '100px',
+        height: '35px',
+        backgroundColor: 'var(--SecondaryColor)',
+        color: 'var(--PrimaryColor)',
+        action: this.clearAction,
+      },
+      {
+        text: 'confirm',
+        width: '100px',
+        height: '35px',
+        backgroundColor: 'var(--PrimaryColor)',
+        color: 'var(--SecondaryColor)',
+        action: () =>
+          alert('should bring up a loader and await for ther persist'),
+      },
+    ]);
   }
 
   public editEvent(e: MouseEvent): void {
     e.stopPropagation();
-    this.controlAction.set(true);
+    this.action.set(Action.UPDATE);
+    this.actionTitle.set('Edit event');
   }
 
   public cancelEvent(e: MouseEvent): void {
     e.stopPropagation();
-    this.controlAction.set(true);
+    this.action.set(Action.DELETE);
+    this.actionTitle.set('Cancel event');
   }
 }

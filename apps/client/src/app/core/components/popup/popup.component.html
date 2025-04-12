@@ -6,9 +6,25 @@
       [style.justifyContent]="showCloseBtn ? 'space-between' : 'center'"
     >
       <span>{{ title }}</span>
-      <i *ngIf="showCloseBtn" (click)="close()" class="fa-solid fa-xmark"></i>
+      <i
+        *ngIf="showCloseBtn"
+        (click)="close()"
+        class="fa-solid fa-xmark icon"
+      ></i>
     </div>
     <div #content class="popup-content"><ng-content></ng-content></div>
-    <div *ngIf="actionButtons.length" class="popup-controls"></div>
+    @if (actionButtons.length) {
+    <div class="popup-controls">
+      @for (button of actionButtons; track $index) {
+      <button
+        class="default-button"
+        [ngStyle]="ActionButton.getStyles(button)"
+        (click)="button.action()"
+      >
+        {{ button.text }}
+      </button>
+      }
+    </div>
+    }
   </div>
 </div>
