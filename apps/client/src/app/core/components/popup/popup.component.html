@@ -1,0 +1,14 @@
+<div #overlay class="popup-overlay" (click)="close($event)">
+  <div #container class="popup-container">
+    <div
+      #header
+      class="popup-title"
+      [style.justifyContent]="showCloseBtn ? 'space-between' : 'center'"
+    >
+      <span>{{ title }}</span>
+      <i *ngIf="showCloseBtn" (click)="close()" class="fa-solid fa-xmark"></i>
+    </div>
+    <div #content class="popup-content"><ng-content></ng-content></div>
+    <div *ngIf="actionButtons.length" class="popup-controls"></div>
+  </div>
+</div>

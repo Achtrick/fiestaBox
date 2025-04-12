@@ -1,16 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Event, EventType } from '../../../models/Event.model';
-import { LayoutComponent } from '../../components/layout/layout.component';
+import {
+  PopupAnimation,
+  PopupComponent,
+} from '../../components/popup/popup.component';
 
 @Component({
   selector: 'events',
-  imports: [CommonModule, LayoutComponent, RouterLink],
+  imports: [CommonModule, RouterLink, PopupComponent],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
+  public controlAction: WritableSignal<boolean> = signal(false);
+  public PopupAnimation = PopupAnimation;
   public events: Event[] = [
     {
       Id: '1',
@@ -109,4 +114,21 @@ export class EventsComponent {
       Type: EventType.Platinium,
     },
   ];
+
+  constructor() {}
+
+  public addEvent(e: MouseEvent): void {
+    e.stopPropagation();
+    this.controlAction.set(true);
+  }
+
+  public editEvent(e: MouseEvent): void {
+    e.stopPropagation();
+    this.controlAction.set(true);
+  }
+
+  public cancelEvent(e: MouseEvent): void {
+    e.stopPropagation();
+    this.controlAction.set(true);
+  }
 }

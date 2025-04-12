@@ -4,10 +4,15 @@
 }
 body {
   margin: 0px;
+  background-color: var(--ThirdColor);
+}
+a {
+  text-decoration: none;
 }
 :root {
-  --PrimaryColor: #d7227fea;
-  --SecondaryColor: #00abc2d2;
+  --PrimaryColor: #212529;
+  --SecondaryColor: #ffffff;
+  --ThirdColor: #f5f6f7;
 }
 
 // Globals

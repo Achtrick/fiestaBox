@@ -3,12 +3,18 @@
     <ng-content></ng-content>
   </div>
   <div class="layout-toolbar">
-    <a routerLink="/"><i class="fa-solid fa-calendar-day"></i></a>
-    <a *ngIf="eventId" [routerLink]="['/albums/', eventId]">
-      <i class="fa-solid fa-folder"></i>
-    </a>
-    <a *ngIf="albumId" [routerLink]="['/albums/', albumId]"
-      ><i class="fa-solid fa-image"></i
-    ></a>
+    <a routerLink="/"><i class="fa-regular fa-calendar"></i>Events </a>
+    <ng-container *ngIf="eventId()">
+      <span>/</span>
+      <a [routerLink]="['/albums/', eventId()]">
+        <i class="fa-regular fa-folder"></i>Albums
+      </a>
+    </ng-container>
+    <ng-container *ngIf="albumId()">
+      <span>/</span>
+      <a *ngIf="albumId()" [routerLink]="['/gallery/', eventId(), albumId()]"
+        ><i class="fa-regular fa-image"></i>Gallery
+      </a>
+    </ng-container>
   </div>
 </div>

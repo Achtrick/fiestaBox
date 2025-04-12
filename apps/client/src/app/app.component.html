@@ -1,1 +1,3 @@
-<router-outlet></router-outlet>
+<layout *ngIf="authService.isAuthenticated()"
+  ><router-outlet></router-outlet
+></layout>

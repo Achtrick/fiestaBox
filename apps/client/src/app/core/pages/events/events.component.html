@@ -1,25 +1,37 @@
-<layout>
-  <div class="events-container">
-    <div class="header">
-      <h1>
-        My Events
-        <p class="badge">{{ events.length }}</p>
-      </h1>
-      <button class="default-button">
-        <i class="fa-solid fa-plus"></i>
-      </button>
-    </div>
-
-    <div class="content">
-      @for (event of events; track $index) {
-      <div class="card" [routerLink]="['/albums/', event.Id]">
-        <img [src]="event.CoverPhoto" [alt]="event.Name" />
-        <div class="overlay">
-          <p>{{ event.Name }}</p>
-          <p>{{ event.Date }}</p>
-        </div>
+<div class="events-container">
+  <div class="content">
+    @for (event of events; track $index) {
+    <div class="card" [routerLink]="['/albums/', event.Id]">
+      <img [src]="event.CoverPhoto" [alt]="event.Name" />
+      <div class="overlay">
+        <p>{{ event.Name }}</p>
+        <p>{{ event.Date }}</p>
       </div>
-      }
+      <div class="actions">
+        <button class="default-button" (click)="cancelEvent($event)">
+          cancel
+        </button>
+        <button class="default-button" (click)="editEvent($event)">edit</button>
+      </div>
     </div>
+    }
   </div>
-</layout>
+
+  <popup
+    [(visible)]="controlAction"
+    [animation]="PopupAnimation.SlideUp"
+    [width]="'100%'"
+    [height]="'60%'"
+    [title]="'title here'"
+  ></popup>
+
+  <div class="events-toolbar">
+    <h1>
+      Events
+      <p class="badge">{{ events.length }}</p>
+    </h1>
+    <button class="default-button" (click)="addEvent($event)">
+      <i class="fa-regular fa-plus"></i>
+    </button>
+  </div>
+</div>
