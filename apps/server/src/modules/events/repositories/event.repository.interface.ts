@@ -1,8 +1,6 @@
-import { Event, EventDocument } from '../entities/event.schema';
+import { IBaseRepository } from '../../../shared/repositories/base.repository.interface';
+import { EventDocument } from '../entities/event.schema';
 
-export interface IEventRepository {
-  create(event: Partial<Event>): Promise<EventDocument>;
-  findById(id: string): Promise<EventDocument | null>;
-  update(id: string, event: Partial<Event>): Promise<EventDocument>;
-  delete(id: string): Promise<void>;
+export interface IEventRepository extends IBaseRepository<EventDocument> {
+  findByTitle(title: string): Promise<EventDocument | null>;
 }

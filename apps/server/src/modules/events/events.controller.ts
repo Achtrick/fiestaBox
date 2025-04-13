@@ -10,7 +10,6 @@ import {
 import { EventsService } from './events.service';
 import { Event } from './entities/event.schema';
 import { CreateEventDto } from './dto/create-event.dto';
-import { log } from 'console';
 
 @Controller('events')
 export class EventsController {
@@ -18,7 +17,6 @@ export class EventsController {
 
   @Post()
   async create(@Body() createEventDto: CreateEventDto) {
-    log('createEventDto', createEventDto);
     return this.eventsService.createEvent(createEventDto);
   }
 
@@ -38,5 +36,15 @@ export class EventsController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.eventsService.deleteEvent(id);
+  }
+
+  @Get()
+  async findAll(@Param('filter') filter: object) {
+    return this.eventsService.findAllEvent(filter);
+  }
+
+  @Get('title/:title')
+  async findOneByTitle(@Param('title') title: string) {
+    return this.eventsService.findEventByTitle(title);
   }
 }
