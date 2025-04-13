@@ -153,6 +153,7 @@ export class PopupComponent implements OnInit, OnChanges {
 
   public open(): void {
     this._visible.next(true);
+    document.body.style.overflow = 'hidden';
     setTimeout(() => {
       this._animate.next(true);
     }, 0);
@@ -166,6 +167,7 @@ export class PopupComponent implements OnInit, OnChanges {
       return;
     }
 
+    document.body.style.overflow = 'auto';
     this.container.nativeElement.style.transition = 'all 0.3s';
     this._visible.next(false);
     this.visibleChange.emit(false);
