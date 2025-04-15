@@ -6,7 +6,7 @@ export enum EventType {
   GOLD = 'gold',
 }
 export interface IEventDto extends IMongo {
-  Name: string;
+  name: string;
   startDate: Date;
   description: string;
   type: EventType;
