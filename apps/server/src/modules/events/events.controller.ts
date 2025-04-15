@@ -10,6 +10,7 @@ import {
 import { EventsService } from './events.service';
 import { Event } from './entities/event.schema';
 import { CreateEventDto } from './dto/create-event.dto';
+import { SuccessMessage } from '../../common/decorators/success-message.decorator';
 
 @Controller('events')
 export class EventsController {
@@ -39,6 +40,7 @@ export class EventsController {
   }
 
   @Get()
+  @SuccessMessage('All events have been successfully retrieved!')
   async findAll(@Param('filter') filter: object) {
     return this.eventsService.findAllEvent(filter);
   }
