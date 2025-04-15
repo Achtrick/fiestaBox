@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
@@ -9,6 +9,14 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // strips properties that are not in the DTO
+      forbidNonWhitelisted: true, // throws error if unknown props exist
+      transform: true, // transforms payloads to DTO instances
+    })
+  );
 
   const transformInterceptor = app.get(TransformInterceptor);
 
