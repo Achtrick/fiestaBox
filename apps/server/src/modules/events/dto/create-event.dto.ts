@@ -1,5 +1,5 @@
 import {
-  IsDate,
+  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -11,10 +11,10 @@ import { EventType, IEventDto } from '@dto-interfaces';
 export class CreateEventDto implements IEventDto {
   @IsNotEmpty()
   @IsString()
-  readonly Name: string;
+  readonly name: string;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   readonly startDate: Date;
 
   @IsOptional()

@@ -53,13 +53,13 @@ export class EventsService {
   }
 
   /**
-   * Finds an event by its Title.
+   * Finds an event by its Name.
    * Throws NotFoundException if the event does not exist.
    */
-  async findEventByTitle(title: string): Promise<EventDocument> {
-    const event = await this.eventRepo.findByTitle(title);
+  async findEventByName(name: string): Promise<EventDocument> {
+    const event = await this.eventRepo.findByName(name);
     if (!event) {
-      throw new NotFoundException(`Event with title ${title} not found`);
+      throw new NotFoundException(`Event with name ${name} not found`);
     }
     return event;
   }

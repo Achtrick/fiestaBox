@@ -2,5 +2,5 @@ import { IBaseRepository } from '../../../shared/repositories/base.repository.in
 import { EventDocument } from '../entities/event.schema';
 
 export interface IEventRepository extends IBaseRepository<EventDocument> {
-  findByTitle(title: string): Promise<EventDocument | null>;
+  findByName(name: string): Promise<EventDocument | null>;
 }

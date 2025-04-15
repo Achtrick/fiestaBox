@@ -7,7 +7,7 @@ export type EventDocument = Event & Document;
 @Schema({ timestamps: true })
 export class Event implements IEventDto {
   @Prop({ required: true, type: String })
-  readonly Name: string;
+  readonly name: string;
 
   @Prop({ required: true, type: Date })
   readonly startDate: Date;

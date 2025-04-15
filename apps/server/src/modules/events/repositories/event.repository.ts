@@ -16,7 +16,7 @@ export class EventRepository
     super(eventModel);
   }
 
-  async findByTitle(title: string): Promise<EventDocument | null> {
-    return this.eventModel.findOne({ title }).exec();
+  async findByName(name: string): Promise<EventDocument | null> {
+    return this.eventModel.findOne({ name }).exec();
   }
 }
