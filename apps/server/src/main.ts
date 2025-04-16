@@ -6,7 +6,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
+  const globalPrefix = process.env.GLOBAL_PREFIX || 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
 
@@ -23,6 +23,14 @@ async function bootstrap() {
   app.useGlobalInterceptors(transformInterceptor);
 
   app.useGlobalFilters(new AllExceptionsFilter());
+
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
 
   await app.listen(port);
   Logger.log(
