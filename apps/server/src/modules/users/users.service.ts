@@ -15,14 +15,13 @@ export class UsersService {
     return this.userRepository.findByEmail(email);
   }
 
-  async findByVerificationToken(token: string): Promise<UserDocument | null> {
-    return this.userRepository.findByVerificationToken(token);
+  async findUserById(id: string): Promise<UserDocument | null> {
+    return this.userRepository.findById(id);
   }
 
   async create(
     createUserDto: CreateUserDto & {
       isVerified?: boolean;
-      verificationToken?: string;
     }
   ): Promise<UserDocument> {
     return this.userRepository.create(createUserDto);

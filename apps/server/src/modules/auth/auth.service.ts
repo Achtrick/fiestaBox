@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './dto/signup.dto';
@@ -56,10 +57,6 @@ export class AuthService {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(signupDto.password, 10);
 
-    // Generate a unique verification token – here we simply use a UUID.
-    const verificationToken = uuidv4();
-
-    // Create a new user. (Assume isVerified is false by default).
     const user = await this.usersService.create({
       email: signupDto.email,
       password: hashedPassword,
@@ -67,17 +64,17 @@ export class AuthService {
       phone: signupDto.phone,
       role: UserRole.USER,
       isVerified: false,
-      verificationToken, // store this token on the user record
     });
+
+    const verificationToken = this.jwtService.sign(
+      { sub: user._id, type: 'emailVerify' },
+      { expiresIn: '24h', secret: process.env.JWT_SECRET }
+    );
 
     //Send email verification link with the token.
     const verificationUrl = `${process.env.SERVER_HOST}:${process.env.PORT}/${process.env.GLOBAL_PREFIX}/auth/verify?token=${verificationToken}`;
 
-    await this.mailerService.sendVerificationEmail(
-      user.email,
-      verificationUrl
-      // `Please verify your email by visiting: ${verificationUrl}`
-    );
+    await this.mailerService.sendVerificationEmail(user.email, verificationUrl);
 
     return {
       message:
@@ -86,16 +83,31 @@ export class AuthService {
   }
 
   async verifyEmail(token: string) {
-    // Find the user by verification token.
-    const user = await this.usersService.findByVerificationToken(token);
-    if (!user) {
+    let payload: any;
+    try {
+      payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+    } catch (error) {
       throw new BadRequestException('Invalid or expired verification token');
     }
 
-    // Mark the user as verified
-    user.isVerified = true;
-    user.verificationToken = null; // Clear the token once it's been used
-    await this.usersService.update(user._id as string, user);
+    // Ensure the token has the correct type
+    if (payload.type !== 'emailVerify') {
+      throw new BadRequestException('Invalid verification token');
+    }
+
+    // Retrieve the user by the id encoded in the token
+    const user = await this.usersService.findUserById(payload.sub);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Update user's verification status
+    if (!user.isVerified) {
+      user.isVerified = true;
+      await this.usersService.update(user._id as string, user);
+    }
 
     return { message: 'Email verified successfully!' };
   }

@@ -22,10 +22,6 @@ export class User implements IUserDto {
   @Prop({ default: false })
   isVerified: boolean;
 
-  // Stores a verification token until the user verifies their email.
-  @Prop({ default: null })
-  verificationToken: string;
-
   @Prop({ required: true, type: String, default: UserRole.USER })
   role: UserRole;
 }
