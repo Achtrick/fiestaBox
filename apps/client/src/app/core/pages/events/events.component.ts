@@ -23,7 +23,7 @@ export class EventsComponent {
       Name: 'Startup Meetup',
       CoverPhoto:
         'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      Date: '2025-06-10',
+      StartDate: '2025-06-10',
       Type: EventType.Free,
     },
     {
@@ -31,7 +31,7 @@ export class EventsComponent {
       Name: 'Developer Bootcamp',
       CoverPhoto:
         'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      Date: '2025-07-01',
+      StartDate: '2025-07-01',
       Type: EventType.Platinium,
     },
     {
@@ -39,7 +39,7 @@ export class EventsComponent {
       Name: 'Cybersecurity Workshop',
       CoverPhoto:
         'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      Date: '2025-09-12',
+      StartDate: '2025-09-12',
       Type: EventType.Free,
     },
     {
@@ -47,7 +47,7 @@ export class EventsComponent {
       Name: 'Cloud Architecture Panel',
       CoverPhoto:
         'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      Date: '2025-11-01',
+      StartDate: '2025-11-01',
       Type: EventType.Platinium,
     },
     {
@@ -55,7 +55,7 @@ export class EventsComponent {
       Name: 'Startup Meetup',
       CoverPhoto:
         'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      Date: '2025-06-10',
+      StartDate: '2025-06-10',
       Type: EventType.Free,
     },
     {
@@ -63,7 +63,7 @@ export class EventsComponent {
       Name: 'Developer Bootcamp',
       CoverPhoto:
         'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      Date: '2025-07-01',
+      StartDate: '2025-07-01',
       Type: EventType.Platinium,
     },
     {
@@ -71,7 +71,7 @@ export class EventsComponent {
       Name: 'Cybersecurity Workshop',
       CoverPhoto:
         'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      Date: '2025-09-12',
+      StartDate: '2025-09-12',
       Type: EventType.Free,
     },
     {
@@ -79,7 +79,7 @@ export class EventsComponent {
       Name: 'Cloud Architecture Panel',
       CoverPhoto:
         'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      Date: '2025-11-01',
+      StartDate: '2025-11-01',
       Type: EventType.Platinium,
     },
     {
@@ -87,7 +87,7 @@ export class EventsComponent {
       Name: 'Startup Meetup',
       CoverPhoto:
         'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      Date: '2025-06-10',
+      StartDate: '2025-06-10',
       Type: EventType.Free,
     },
     {
@@ -95,7 +95,7 @@ export class EventsComponent {
       Name: 'Developer Bootcamp',
       CoverPhoto:
         'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      Date: '2025-07-01',
+      StartDate: '2025-07-01',
       Type: EventType.Platinium,
     },
     {
@@ -103,7 +103,7 @@ export class EventsComponent {
       Name: 'Cybersecurity Workshop',
       CoverPhoto:
         'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      Date: '2025-09-12',
+      StartDate: '2025-09-12',
       Type: EventType.Free,
     },
     {
@@ -111,7 +111,7 @@ export class EventsComponent {
       Name: 'Cloud Architecture Panel',
       CoverPhoto:
         'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      Date: '2025-11-01',
+      StartDate: '2025-11-01',
       Type: EventType.Platinium,
     },
   ];
@@ -147,8 +147,7 @@ export class EventsComponent {
         height: '35px',
         backgroundColor: 'var(--PrimaryColor)',
         color: 'var(--SecondaryColor)',
-        action: () =>
-          alert('should bring up a loader and await for ther persist'),
+        formId: 'events-form',
       },
     ]);
   }

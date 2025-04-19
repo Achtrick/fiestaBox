@@ -58,10 +58,12 @@ export class PopupComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes['visible'].currentValue) {
-      this.open();
-    } else {
-      this.close();
+    if (changes['visible']) {
+      if (changes['visible'].currentValue) {
+        this.open();
+      } else {
+        this.close();
+      }
     }
     if (changes['actionButtons']) {
       this.setContentStyle();
@@ -185,7 +187,8 @@ export class ActionButton {
   width?: string = '';
   height?: string = '';
   disabled?: boolean = false;
-  action: (() => void) | (() => Promise<void>) = () => {};
+  formId?: string;
+  action?: (() => void) | (() => Promise<void>) = () => {};
 
   public static getStyles(button: ActionButton) {
     return {

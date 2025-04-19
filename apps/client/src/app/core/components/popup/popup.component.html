@@ -6,11 +6,9 @@
       [style.justifyContent]="showCloseBtn ? 'space-between' : 'center'"
     >
       <span>{{ title }}</span>
-      <i
-        *ngIf="showCloseBtn"
-        (click)="close()"
-        class="fa-solid fa-xmark icon"
-      ></i>
+      @if (showCloseBtn) {
+      <i (click)="close()" class="fa-solid fa-xmark icon"></i>
+      }
     </div>
     <div #content class="popup-content"><ng-content></ng-content></div>
     @if (actionButtons.length) {
@@ -19,7 +17,9 @@
       <button
         class="default-button"
         [ngStyle]="ActionButton.getStyles(button)"
-        (click)="button.action()"
+        (click)="button.action ? button.action() : null"
+        [attr.form]="button.formId"
+        [type]="button.formId ? 'submit' : 'button'"
       >
         {{ button.text }}
       </button>

@@ -1,6 +1,13 @@
-<form>
+<form id="events-form" (submit)="persistEventData($event)">
   <input class="default-input" type="text" placeholder="title" />
   <input class="default-input" type="date" placeholder="date" />
   <textarea class="default-input" placeholder="description"></textarea>
-  <input class="default-input" type="file" placeholder="cover" />
+  <input
+    id="file"
+    hidden
+    class="default-input"
+    type="file"
+    placeholder="cover"
+  />
+  <img [src]="" />
 </form>
