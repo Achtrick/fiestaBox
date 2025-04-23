@@ -40,7 +40,7 @@ export class AuthService {
       throw new UnauthorizedException('Email not verified');
     }
 
-    const payload = { sub: user._id, email: user.email };
+    const payload = { sub: user._id, email: user.email, role: user.role };
 
     return {
       token: this.jwtService.sign(payload),
@@ -68,7 +68,7 @@ export class AuthService {
 
     const verificationToken = this.jwtService.sign(
       { sub: user._id, type: 'emailVerify' },
-      { expiresIn: '24h', secret: process.env.JWT_SECRET }
+      { expiresIn: '24h', secret: process.env.JWT_VERIFY_SECRET }
     );
 
     //Send email verification link with the token.
@@ -86,7 +86,7 @@ export class AuthService {
     let payload: any;
     try {
       payload = this.jwtService.verify(token, {
-        secret: process.env.JWT_SECRET,
+        secret: process.env.JWT_VERIFY_SECRET,
       });
     } catch (error) {
       throw new BadRequestException('Invalid or expired verification token');

@@ -6,16 +6,26 @@ import {
   Param,
   Put,
   Delete,
+  UseGuards,
+  Inject,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { Event, EventDocument } from './entities/event.schema';
 import { CreateEventDto } from './dto/create-event.dto';
 import { SuccessMessage } from '../../common/decorators/success-message.decorator';
+import { Owner } from '../../common/decorators/owner.decorator';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { OwnerGuard } from '../../common/guards/owner.guard';
+import { EVENTS_SERVICE } from './events.service.tokens';
+import { AdminGuard } from '../../common/guards/admin.guard';
 
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(
+    @Inject(EVENTS_SERVICE) private readonly eventsService: EventsService
+  ) {}
 
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
   @SuccessMessage(
     (data: EventDocument) => `Event created successfully with ID: ${data._id}`
@@ -33,6 +43,12 @@ export class EventsController {
     return this.eventsService.findEventById(id);
   }
 
+  @UseGuards(JwtAuthGuard, OwnerGuard)
+  @Owner({
+    serviceToken: 'EventsServiceToken',
+    param: 'id',
+    ownerField: 'creatorId',
+  })
   @Put(':id')
   @SuccessMessage(
     (data: EventDocument) =>

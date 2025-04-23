@@ -2,12 +2,13 @@ import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Event, EventDocument } from './entities/event.schema';
 import { IEventRepository } from './repositories/event.repository.interface';
+import { EVENT_REPOSITORY } from './events.service.tokens';
 
 @Injectable()
 export class EventsService {
   // Using a custom injection token to get the repository implementation.
   constructor(
-    @Inject('IEventRepository') private readonly eventRepo: IEventRepository
+    @Inject(EVENT_REPOSITORY) private readonly eventRepo: IEventRepository
   ) {}
 
   /**

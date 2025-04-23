@@ -25,10 +25,8 @@ export class MailerService {
           to,
           verificationUrl,
         },
-        //html: `<p>Please verify your email by clicking <a href="${verificationUrl}">here</a></p>`,
       })
       .catch((err) => {
-        console.log('err ====', err);
         throw new BadRequestException('Failed to send verification email');
       });
 
