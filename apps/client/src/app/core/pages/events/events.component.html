@@ -1,15 +1,15 @@
 <div class="events-container">
   <div class="content">
     @for (event of events; track $index) {
-    <div class="card" [routerLink]="['/albums/', event.Id]">
-      <img [src]="event.CoverPhoto" [alt]="event.Name" />
+    <div class="card" [routerLink]="['/albums/', event._id]">
+      <img [src]="event.coverPhoto" [alt]="event.name" />
       <div class="overlay">
-        <p>{{ event.Name }}</p>
-        <p>{{ event.StartDate }}</p>
+        <p>{{ event.name }}</p>
+        <p>{{ event.startDate }}</p>
       </div>
       <div class="actions">
-        <button class="default-button" (click)="cancelEvent($event)">
-          cancel
+        <button class="default-button" (click)="deleteEvent($event)">
+          delete
         </button>
         <button class="default-button" (click)="editEvent($event)">edit</button>
       </div>
@@ -33,13 +33,9 @@
     } @case (Action.DELETE) {} }
   </popup>
 
-  <div class="events-toolbar">
-    <h1>
-      Events
-      <p class="badge">{{ events.length }}</p>
-    </h1>
-    <button class="default-button" (click)="addEvent($event)">
-      <i class="fa-regular fa-plus"></i>
-    </button>
-  </div>
+  <toolbar
+    [title]="'Events'"
+    [action]="addEvent"
+    [badgeCount]="events.length"
+  ></toolbar>
 </div>

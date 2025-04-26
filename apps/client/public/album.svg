@@ -1,21 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NavigationComponent } from './core/components/navigation/navigation.component';
-import { AuthService } from './services/auth.service';
-
-@Component({
-  imports: [RouterModule, NavigationComponent, CommonModule],
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
-})
-export class AppComponent {
-  constructor(public authService: AuthService) {}
-}
-
-export const IconRegistry = {
-  album: `<svg viewBox="1 1 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="1 1 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
     <g id="SVGRepo_iconCarrier">
@@ -29,5 +12,4 @@ export const IconRegistry = {
             d="M12.25 10C12.25 9.58579 12.5858 9.25 13 9.25H18C18.4142 9.25 18.75 9.58579 18.75 10C18.75 10.4142 18.4142 10.75 18 10.75H13C12.5858 10.75 12.25 10.4142 12.25 10Z"
             fill="#000000"></path>
     </g>
-</svg>`,
-};
+</svg>

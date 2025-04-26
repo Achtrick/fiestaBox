@@ -1,118 +1,83 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { EventType, IEventDto } from '@dto-interfaces';
 import { Action } from '../../../models/Action.model';
-import { Event, EventType } from '../../../models/Event.model';
 import { EventFormComponent } from '../../components/events/event-form.component';
 import {
   ActionButton,
   PopupAnimation,
   PopupComponent,
 } from '../../components/popup/popup.component';
+import { ToolbarComponent } from '../../components/toolbar/toolbar.component';
 
 @Component({
   selector: 'events',
-  imports: [CommonModule, RouterLink, PopupComponent, EventFormComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    PopupComponent,
+    EventFormComponent,
+    ToolbarComponent,
+  ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
-  public events: Event[] = [
+  public events: IEventDto[] = [
     {
-      Id: '1',
-      Name: 'Startup Meetup',
-      CoverPhoto:
+      _id: '1',
+      name: 'Startup Meetup',
+      coverPhoto:
         'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      StartDate: '2025-06-10',
-      Type: EventType.Free,
+      startDate: new Date('2025-06-10'),
+      type: EventType.FREE,
+      description: '---',
     },
     {
-      Id: '2',
-      Name: 'Developer Bootcamp',
-      CoverPhoto:
+      _id: '2',
+      name: 'Developer Bootcamp',
+      coverPhoto:
         'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      StartDate: '2025-07-01',
-      Type: EventType.Platinium,
+      startDate: new Date('2025-07-01'),
+      type: EventType.GOLD,
+      description: '---',
     },
     {
-      Id: '3',
-      Name: 'Cybersecurity Workshop',
-      CoverPhoto:
+      _id: '3',
+      name: 'Cybersecurity Workshop',
+      coverPhoto:
         'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      StartDate: '2025-09-12',
-      Type: EventType.Free,
+      startDate: new Date('2025-09-12'),
+      type: EventType.FREE,
+      description: '---',
     },
     {
-      Id: '4',
-      Name: 'Cloud Architecture Panel',
-      CoverPhoto:
+      _id: '4',
+      name: 'Cloud Architecture Panel',
+      coverPhoto:
         'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      StartDate: '2025-11-01',
-      Type: EventType.Platinium,
+      startDate: new Date('2025-11-01'),
+      type: EventType.SILVER,
+      description: '---',
     },
     {
-      Id: '5',
-      Name: 'Startup Meetup',
-      CoverPhoto:
+      _id: '5',
+      name: 'Startup Meetup',
+      coverPhoto:
         'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      StartDate: '2025-06-10',
-      Type: EventType.Free,
+      startDate: new Date('2025-06-10'),
+      type: EventType.FREE,
+      description: '---',
     },
     {
-      Id: '6',
-      Name: 'Developer Bootcamp',
-      CoverPhoto:
+      _id: '6',
+      name: 'Developer Bootcamp',
+      coverPhoto:
         'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      StartDate: '2025-07-01',
-      Type: EventType.Platinium,
-    },
-    {
-      Id: '7',
-      Name: 'Cybersecurity Workshop',
-      CoverPhoto:
-        'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      StartDate: '2025-09-12',
-      Type: EventType.Free,
-    },
-    {
-      Id: '8',
-      Name: 'Cloud Architecture Panel',
-      CoverPhoto:
-        'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      StartDate: '2025-11-01',
-      Type: EventType.Platinium,
-    },
-    {
-      Id: '9',
-      Name: 'Startup Meetup',
-      CoverPhoto:
-        'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      StartDate: '2025-06-10',
-      Type: EventType.Free,
-    },
-    {
-      Id: '10',
-      Name: 'Developer Bootcamp',
-      CoverPhoto:
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      StartDate: '2025-07-01',
-      Type: EventType.Platinium,
-    },
-    {
-      Id: '11',
-      Name: 'Cybersecurity Workshop',
-      CoverPhoto:
-        'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      StartDate: '2025-09-12',
-      Type: EventType.Free,
-    },
-    {
-      Id: '12',
-      Name: 'Cloud Architecture Panel',
-      CoverPhoto:
-        'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      StartDate: '2025-11-01',
-      Type: EventType.Platinium,
+      startDate: new Date('2025-07-01'),
+      type: EventType.GOLD,
+      description: '---',
     },
   ];
   public Action = Action;
@@ -128,7 +93,7 @@ export class EventsComponent {
     this.action.set(null);
   };
 
-  public addEvent(e: MouseEvent): void {
+  public addEvent = (e: MouseEvent): void => {
     e.stopPropagation();
     this.action.set(Action.ADD);
     this.actionTitle.set('Create a new event');
@@ -150,7 +115,7 @@ export class EventsComponent {
         formId: 'events-form',
       },
     ]);
-  }
+  };
 
   public editEvent(e: MouseEvent): void {
     e.stopPropagation();
@@ -158,9 +123,27 @@ export class EventsComponent {
     this.actionTitle.set('Edit event');
   }
 
-  public cancelEvent(e: MouseEvent): void {
+  public deleteEvent(e: MouseEvent): void {
     e.stopPropagation();
     this.action.set(Action.DELETE);
-    this.actionTitle.set('Cancel event');
+    this.actionTitle.set('Sure you want to delete this event ?');
+    this.actionButtons.set([
+      {
+        text: 'no',
+        width: '100px',
+        height: '35px',
+        backgroundColor: 'var(--SecondaryColor)',
+        color: 'var(--PrimaryColor)',
+        action: this.clearAction,
+      },
+      {
+        text: 'yes, delete',
+        width: '100px',
+        height: '35px',
+        backgroundColor: 'var(--PrimaryColor)',
+        color: 'var(--SecondaryColor)',
+        action: () => alert('event canceled'),
+      },
+    ]);
   }
 }
