@@ -33,10 +33,19 @@
     }
   }
   button {
-    width: 45px;
+    width: auto;
     height: 45px;
     box-shadow: none;
     background-color: var(--SecondaryColor);
     color: var(--PrimaryColor);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 0px 10px;
+
+    p {
+      font-size: 12px;
+    }
   }
 }

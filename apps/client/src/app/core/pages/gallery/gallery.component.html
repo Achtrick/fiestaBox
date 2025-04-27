@@ -1,1 +1,48 @@
-<p>gallery works!</p>
+<div class="gallery-container">
+  <div class="content">
+    @for (fileUrl of media; track $index; ) {
+    <div
+      class="media-file"
+      (longPress)="selectedMedia().length ? null : toggleFileSelection(fileUrl)"
+      (mousedown)="selectedMedia().length ? toggleFileSelection(fileUrl) : null"
+    >
+      <img [alt]="$index" [src]="fileUrl" />
+      @if (selectedMedia().length) {
+      <div class="overlay">
+        @if (selectedMedia().includes(fileUrl)) {
+        <i class="fa-solid fa-circle-check"></i>
+        } @else {
+        <i class="fa-solid fa-circle-notch"></i>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <floating-widget
+    [visible]="!!selectedMedia().length"
+    [widgetItems]="floatingWidgetItems"
+  ></floating-widget>
+
+  <popup
+    [visible]="!!action()"
+    (visibleChange)="clearAction()"
+    [animation]="PopupAnimation.SlideUp"
+    [width]="'100%'"
+    [height]="'auto'"
+    [title]="actionTitle()"
+    [actionButtons]="actionButtons()"
+  >
+    @switch (action()) { @case (Action.ADD) { } @case (Action.UPDATE) { } @case
+    (Action.DELETE) {} }
+  </popup>
+
+  <toolbar
+    [title]="'Media'"
+    [actionIcon]="'fa-solid fa-file-arrow-up'"
+    [actionTitle]="'Upload'"
+    [action]="openUploader"
+    [badgeCount]="media.length"
+  ></toolbar>
+</div>

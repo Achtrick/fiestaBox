@@ -9,6 +9,8 @@ import { Component, Input } from '@angular/core';
 })
 export class ToolbarComponent {
   @Input() title: string = '';
+  @Input() actionTitle: string = '';
+  @Input() actionIcon: string = '';
   @Input() badgeCount: number = 0;
   @Input() action: (event: MouseEvent) => void;
 }

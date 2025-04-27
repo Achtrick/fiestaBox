@@ -14,6 +14,7 @@
       max-height: 25dvh;
       position: relative;
       cursor: pointer;
+      animation: fadeSlideIn 0.6s ease forwards;
 
       ::ng-deep svg {
         filter: drop-shadow(0px 0px 5px #ccc);
@@ -68,7 +69,4 @@
       }
     }
   }
-}
-
-@media (orientation: landscape) {
 }

@@ -22,7 +22,10 @@ import {
     <div class="context-menu-container" (click)="closeContextMenu()">
       <div #contextMenu id="context-menu" class="context-menu">
         @for (item of menuItems(); track $index) {
-        <action-button [actionButton]="item"></action-button>
+        <action-button
+          [class.last]="$index === menuItems().length - 1"
+          [actionButton]="item"
+        ></action-button>
         }
       </div>
     </div>
@@ -44,7 +47,7 @@ import {
     background-color:rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(5px);
     box-shadow: 5px 5px 10px #ccc;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     width: 200px;
     height: auto;
     max-height: 200px;
@@ -68,6 +71,9 @@ import {
     }
     action-button{
         width: 100%;
+    }
+    ::ng-deep .last button{
+      border-bottom: none;
     }
   }
   }
