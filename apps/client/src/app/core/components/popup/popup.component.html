@@ -14,15 +14,7 @@
     @if (actionButtons.length) {
     <div class="popup-controls">
       @for (button of actionButtons; track $index) {
-      <button
-        class="default-button"
-        [ngStyle]="ActionButton.getStyles(button)"
-        (click)="button.action ? button.action() : null"
-        [attr.form]="button.formId"
-        [type]="button.formId ? 'submit' : 'button'"
-      >
-        {{ button.text }}
-      </button>
+      <action-button [actionButton]="button"></action-button>
       }
     </div>
     }

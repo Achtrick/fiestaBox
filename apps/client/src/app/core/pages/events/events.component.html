@@ -5,7 +5,7 @@
       <img [src]="event.coverPhoto" [alt]="event.name" />
       <div class="overlay">
         <p>{{ event.name }}</p>
-        <p>{{ event.startDate }}</p>
+        <p>{{ event.startDate | date }}</p>
       </div>
       <div class="actions">
         <button class="default-button" (click)="deleteEvent($event)">
@@ -13,6 +13,10 @@
         </button>
         <button class="default-button" (click)="editEvent($event)">edit</button>
       </div>
+      <div
+        class="badge"
+        [style.backgroundColor]="event.type | eventTypeColor"
+      ></div>
     </div>
     }
   </div>

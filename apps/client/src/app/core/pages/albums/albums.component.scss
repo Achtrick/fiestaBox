@@ -13,6 +13,7 @@
       height: 100%;
       max-height: 25dvh;
       position: relative;
+      cursor: pointer;
 
       ::ng-deep svg {
         filter: drop-shadow(0px 0px 5px #ccc);
@@ -26,6 +27,17 @@
         font-size: 16px;
         text-align: center;
         color: #474747;
+
+        &:nth-child(3) {
+          font-size: 11px;
+          color: #828282;
+          &::before {
+            content: '(';
+          }
+          &::after {
+            content: ')';
+          }
+        }
       }
       .badge {
         position: absolute;

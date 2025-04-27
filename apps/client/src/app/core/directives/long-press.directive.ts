@@ -5,15 +5,18 @@ import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 })
 export class LongPressDirective {
   @Output()
-  longPress = new EventEmitter<void>();
+  public longPress = new EventEmitter<PressPosition>();
 
   private timeout: any;
+  private lastEvent: MouseEvent | TouchEvent | null = null;
 
-  @HostListener('mousedown')
-  @HostListener('touchstart')
-  onPress() {
+  @HostListener('mousedown', ['$event'])
+  @HostListener('touchstart', ['$event'])
+  onPress(event: MouseEvent | TouchEvent) {
+    this.lastEvent = event;
     this.timeout = setTimeout(() => {
-      this.longPress.emit();
+      const coords = this.getCoordinates(this.lastEvent);
+      this.longPress.emit(coords);
       this.vibrate();
     }, 500);
   }
@@ -30,4 +33,25 @@ export class LongPressDirective {
       navigator.vibrate(50);
     }
   }
+
+  private getCoordinates(event: MouseEvent | TouchEvent | null): PressPosition {
+    if (!event) {
+      return { x: '0px', y: '0' };
+    }
+    if (event instanceof MouseEvent) {
+      return { x: event.clientX - 10 + 'px', y: event.clientY - 10 + 'px' };
+    } else if (event instanceof TouchEvent && event.touches.length > 0) {
+      const touch = event.touches[0];
+      return { x: touch.clientX - 10 + 'px', y: touch.clientY - 10 + 'px' };
+    } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
+      const touch = event.changedTouches[0];
+      return { x: touch.clientX - 10 + 'px', y: touch.clientY - 10 + 'px' };
+    }
+    return { x: '0px', y: '0px' };
+  }
+}
+
+export class PressPosition {
+  x: string;
+  y: string;
 }

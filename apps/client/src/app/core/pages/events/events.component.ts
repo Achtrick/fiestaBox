@@ -3,13 +3,14 @@ import { Component, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EventType, IEventDto } from '@dto-interfaces';
 import { Action } from '../../../models/Action.model';
+import { ActionButton } from '../../components/action-button/action-button.component';
 import { EventFormComponent } from '../../components/events/event-form.component';
 import {
-  ActionButton,
   PopupAnimation,
   PopupComponent,
 } from '../../components/popup/popup.component';
 import { ToolbarComponent } from '../../components/toolbar/toolbar.component';
+import { EventTypeColorPipe } from '../../pipes/event-type-color.pipe';
 
 @Component({
   selector: 'events',
@@ -19,6 +20,7 @@ import { ToolbarComponent } from '../../components/toolbar/toolbar.component';
     PopupComponent,
     EventFormComponent,
     ToolbarComponent,
+    EventTypeColorPipe,
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',

@@ -11,12 +11,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import {
+  ActionButton,
+  ActionButtonComponent,
+} from '../action-button/action-button.component';
 
 @Component({
   selector: 'popup',
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.scss'],
-  imports: [CommonModule],
+  imports: [CommonModule, ActionButtonComponent],
 })
 export class PopupComponent implements OnInit, OnChanges {
   @ViewChild('overlay', { static: true }) overlay: ElementRef<HTMLElement>;
@@ -177,26 +181,6 @@ export class PopupComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this._animate.next(false);
     }, 0);
-  }
-}
-
-export class ActionButton {
-  text: string = '';
-  color?: string = '#ffffff';
-  backgroundColor?: string = '#000000';
-  width?: string = '';
-  height?: string = '';
-  disabled?: boolean = false;
-  formId?: string;
-  action?: (() => void) | (() => Promise<void>) = () => {};
-
-  public static getStyles(button: ActionButton) {
-    return {
-      color: button.color,
-      backgroundColor: button.backgroundColor,
-      width: button.width,
-      height: button.height,
-    };
   }
 }
 

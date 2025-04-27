@@ -5,11 +5,13 @@
       [title]="album.name"
       class="folder"
       [routerLink]="['/gallery/', getEventId(), album._id]"
-      (longPress)="editAlbum()"
+      (longPress)="openContextMenu($event, album._id)"
     >
       <svg-icon [svgName]="'album'" [color]="album.color"></svg-icon>
       <p>{{ album.name | titlecase }}</p>
-      @if (album.password) {
+      @if (album.mediaCount) {
+      <p>{{ album.mediaCount }}</p>
+      } @if (album.password) {
       <div class="badge"><i class="fa-solid fa-lock"></i></div>
       }
     </div>
@@ -29,6 +31,12 @@
     @switch (action()) { @case (Action.ADD) { } @case (Action.UPDATE) { } @case
     (Action.DELETE) {} }
   </popup>
+
+  <context-menu
+    [(visible)]="contextMenuVisible"
+    [position]="contextMenuPosition()"
+    [menuItems]="contextMenuItems()"
+  ></context-menu>
 
   <toolbar
     [title]="'Albums'"
