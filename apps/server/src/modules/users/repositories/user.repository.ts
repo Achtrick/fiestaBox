@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../entities/user.schema';
 import { IUserRepository } from './user.repository.interface';
-import { BaseRepository } from '../../../shared/repositories/base.repository';
+import { BaseRepository } from '../../../shared/generic-apis/repositories/base.repository';
 
 @Injectable()
 export class UserRepository

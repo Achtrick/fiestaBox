@@ -9,7 +9,8 @@ export class BaseRepository<T extends Document> {
   }
 
   async findById(id: string): Promise<T | null> {
-    return this.model.findById(id).exec();
+    const model = await this.model.findById(id).exec();
+    return model;
   }
 
   async update(id: string, item: Partial<T>): Promise<T | null> {

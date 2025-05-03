@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,8 @@ async function bootstrap() {
   );
 
   const transformInterceptor = app.get(TransformInterceptor);
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.useGlobalInterceptors(transformInterceptor);
 

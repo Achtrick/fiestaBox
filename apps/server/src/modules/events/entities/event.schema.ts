@@ -1,6 +1,6 @@
 import { EventType, IEventDto } from '@dto-interfaces';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type EventDocument = Event & Document;
 
@@ -23,6 +23,9 @@ export class Event implements IEventDto {
 
   @Prop({ required: false, type: String })
   readonly password?: string;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Album' }], default: [] })
+  albums: Types.ObjectId[];
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
