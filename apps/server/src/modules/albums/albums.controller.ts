@@ -8,6 +8,10 @@ import {
   Post,
   Delete,
   ValidationPipe,
+  UseInterceptors,
+  BadRequestException,
+  UploadedFiles,
+  Inject,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { SuccessMessage } from '../../common/decorators/success-message.decorator';
@@ -16,6 +20,16 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { OwnerGuard } from '../../common/guards/owner.guard';
 import { AlbumsService } from './albums.service';
 import { IsMongoId } from 'class-validator';
+import {
+  MediaUploadOptions,
+  UploadedMedia,
+  UploadService,
+} from '../../shared/upload/services/upload.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { File } from 'multer';
+import { join } from 'path';
+import { UploadOptions } from '../../shared/upload/interfaces/upload-options.interface';
 
 export class IdParamDto {
   @IsMongoId() // ← ensures “id” is a 24‑hex string
@@ -24,7 +38,11 @@ export class IdParamDto {
 
 @Controller('albums')
 export class AlbumsController {
-  constructor(protected readonly albumService: AlbumsService) {}
+  constructor(
+    protected readonly albumService: AlbumsService,
+    private readonly uploadService: UploadService,
+    @Inject('UPLOAD_OPTIONS') private uploadOptions: UploadOptions
+  ) {}
 
   /**
    * ------------------------------ create one album
@@ -118,5 +136,48 @@ export class AlbumsController {
   )
   async findOneByName(@Param('name') name: string) {
     return await this.albumService.findByName(name);
+  }
+
+  /**
+   * ------------------------------ upload media to album
+   * @param albumId
+   * @param files
+   * @returns
+   */
+  @Post(':id/media')
+  @UseInterceptors(
+    FilesInterceptor('files', 20, {
+      storage: diskStorage({
+        destination: 'uploads/tmp',
+        filename: (_, f, cb) => cb(null, f.originalname),
+      }),
+      fileFilter: (_, file, cb) => {
+        if (!file.mimetype.match(/^(image\/.+|video\/.+|audio\/.+)$/)) {
+          return cb(
+            new BadRequestException('Only images, videos & audio allowed'),
+            false
+          );
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 500 * 1024 * 1024 },
+    })
+  )
+  async uploadMedia(
+    @Param(new ValidationPipe({ transform: true }))
+    params: IdParamDto,
+    @UploadedFiles() files: File[]
+  ): Promise<UploadedMedia[]> {
+    const baseRoot =
+      'destination' in this.uploadOptions.providerOptions
+        ? this.uploadOptions.providerOptions.destination
+        : this.uploadOptions.providerOptions.bucket;
+
+    const mediaUploadOptions: MediaUploadOptions = {
+      baseFolder: join(baseRoot, params.id),
+      generateVideoThumbnails: true,
+    };
+
+    return this.albumService.uploadMedias(params.id, files, mediaUploadOptions);
   }
 }
