@@ -12,14 +12,16 @@ import {
   BadRequestException,
   UploadedFiles,
   Inject,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { SuccessMessage } from '../../common/decorators/success-message.decorator';
 import { Album, AlbumDocument } from './entities/album.schema';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { OwnerGuard } from '../../common/guards/owner.guard';
 import { AlbumsService } from './albums.service';
-import { IsMongoId } from 'class-validator';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
 import {
   MediaUploadOptions,
   UploadedMedia,
@@ -34,6 +36,10 @@ import { UploadOptions } from '../../shared/upload/interfaces/upload-options.int
 export class IdParamDto {
   @IsMongoId() // ← ensures “id” is a 24‑hex string
   id: string;
+
+  @IsString()
+  @IsOptional()
+  filename: string;
 }
 
 @Controller('albums')
@@ -179,5 +185,43 @@ export class AlbumsController {
     };
 
     return this.albumService.uploadMedias(params.id, files, mediaUploadOptions);
+  }
+
+  /**
+   * ------------------------------ get media from album
+   * @param albumId
+   * @param filename
+   * @returns
+   */
+  @Get(':id/media/:filename')
+  async getFile(
+    @Param(new ValidationPipe({ transform: true }))
+    params: IdParamDto,
+    @Res() res: Response
+  ) {
+    try {
+      const { id, filename } = params;
+      const file = await this.uploadService.getFile(filename, [id]);
+      res.end(file);
+    } catch (error) {
+      console.error('Error retrieving file:', error);
+      res.status(500).send('Error retrieving file');
+    }
+  }
+
+  @Get(':id/filestream/:filename')
+  async getFileStream(
+    @Param(new ValidationPipe({ transform: true }))
+    params: IdParamDto,
+    @Res() res: Response
+  ) {
+    try {
+      const { id, filename } = params;
+      const file = await this.uploadService.getFileStream(filename, [id]);
+      res.end(file);
+    } catch (error) {
+      console.error('Error retrieving file:', error);
+      res.status(500).send('Error retrieving file');
+    }
   }
 }

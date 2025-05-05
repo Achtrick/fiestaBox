@@ -112,12 +112,15 @@ export class UploadService {
     return results;
   }
 
-  async getFile(filename: string): Promise<Buffer> {
-    return this.storageProvider.getFile(filename);
+  async getFile(filename: string, subFolders?: string[]): Promise<Buffer> {
+    return this.storageProvider.getFile(filename, subFolders);
   }
 
-  async getFileStream(filename: string): Promise<ReadStream> {
-    return this.storageProvider.getFileStream(filename);
+  async getFileStream(
+    filename: string,
+    subFolders?: string[]
+  ): Promise<ReadStream> {
+    return this.storageProvider.getFileStream(filename, subFolders);
   }
 
   async deleteFile(filename: string): Promise<boolean> {

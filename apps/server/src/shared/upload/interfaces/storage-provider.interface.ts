@@ -11,7 +11,7 @@ export interface UploadedFile {
 
 export interface StorageProvider {
   upload(file: File): Promise<UploadedFile>;
-  getFile(filename: string): Promise<Buffer>;
-  getFileStream(filename: string): Promise<ReadStream>;
+  getFile(filename: string, subFolders?: string[]): Promise<Buffer>;
+  getFileStream(filename: string, subFolders?: string[]): Promise<ReadStream>;
   deleteFile(filename: string): Promise<boolean>;
 }

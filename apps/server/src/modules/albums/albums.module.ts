@@ -17,7 +17,7 @@ import path from 'path';
     UploadModule.register({
       provider: 'disk',
       providerOptions: {
-        destination: path.join(__dirname, 'uploads/albums'),
+        destination: path.join(__dirname, '../../../uploads/albums'),
       },
     }),
   ],

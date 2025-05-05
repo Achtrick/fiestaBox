@@ -7,7 +7,6 @@ import {
 import { STORAGE_PROVIDER, UPLOAD_OPTIONS } from './constants/upload.constants';
 import { DiskStorageProvider } from './providers/disk/disk-storage.provider';
 
-@Global()
 @Module({})
 export class UploadModule {
   static register(options: UploadOptions): DynamicModule {

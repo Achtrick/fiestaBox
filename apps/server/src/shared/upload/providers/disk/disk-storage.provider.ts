@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   StorageProvider,
   UploadedFile,
@@ -43,13 +43,20 @@ export class DiskStorageProvider implements StorageProvider {
     };
   }
 
-  async getFile(filename: string): Promise<Buffer> {
-    const filePath = path.join(this.options.destination, filename);
+  async getFile(filename: string, subFolders?: string[]): Promise<Buffer> {
+    const destinationPath = this._handleSubFolders(subFolders);
+
+    const filePath = path.join(destinationPath, filename);
     return fs.promises.readFile(filePath);
   }
 
-  async getFileStream(filename: string): Promise<fs.ReadStream> {
-    const filePath = path.join(this.options.destination, filename);
+  async getFileStream(
+    filename: string,
+    subFolders?: string[]
+  ): Promise<fs.ReadStream> {
+    const destinationPath = this._handleSubFolders(subFolders);
+
+    const filePath = path.join(destinationPath, filename);
     return fs.createReadStream(filePath);
   }
 
@@ -62,5 +69,20 @@ export class DiskStorageProvider implements StorageProvider {
     } catch (error) {
       return false;
     }
+  }
+
+  private _handleSubFolders(subFolders: string[]): string {
+    let destinationPath = this.options.destination;
+    if (Array.isArray(subFolders) && subFolders.length > 0) {
+      const subFolderPath = path.join(...subFolders);
+      destinationPath = path.join(destinationPath, subFolderPath);
+
+      if (!fs.existsSync(destinationPath)) {
+        throw new NotFoundException(
+          `Subfolder ${destinationPath} does not exist`
+        );
+      }
+    }
+    return destinationPath;
   }
 }
