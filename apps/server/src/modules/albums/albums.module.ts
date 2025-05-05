@@ -5,14 +5,13 @@ import { AlbumsService } from './albums.service';
 import { AlbumsController } from './albums.controller';
 import { ALBUMS_REPOSITORY } from './albums.service.tokens';
 import { AlbumRepository } from './repositories/album.repository';
-import { DataBaseModule } from '../../database/database.module';
 import { IsUniqueConstraint } from '../../common/validators/is-unique.validator';
 import { UploadModule } from '../../shared/upload/upload.module';
 import path from 'path';
+import { MediasModule } from '../medias/medias.module';
 
 @Module({
   imports: [
-    DataBaseModule,
     MongooseModule.forFeature([{ name: Album.name, schema: AlbumSchema }]),
     UploadModule.register({
       provider: 'disk',
@@ -20,6 +19,7 @@ import path from 'path';
         destination: path.join(__dirname, '../../../uploads/albums'),
       },
     }),
+    MediasModule,
   ],
   controllers: [AlbumsController],
   providers: [

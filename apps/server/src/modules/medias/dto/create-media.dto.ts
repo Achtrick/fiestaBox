@@ -9,19 +9,26 @@ import {
 import { Types } from 'mongoose';
 import { IsUnique } from '../../../common/decorators/is-unique.decorator';
 
-export class CreateAlbumDto {
+export class CreateMediaDto {
   @IsMongoId()
-  eventId: Types.ObjectId;
+  albumId: Types.ObjectId;
 
   @IsString()
-  @IsUnique('Album', 'name', { message: 'Name already taken.' })
-  name: string;
+  originalName: string;
+
+  @IsString()
+  filename: string;
+
+  @IsString()
+  path: string;
+
+  @IsString()
+  mimeType: string;
+
+  @IsString()
+  size: string;
 
   @IsOptional()
   @IsString()
-  color?: string;
-
-  @IsOptional()
-  @IsString()
-  password?: string;
+  thumbnailPath?: string;
 }

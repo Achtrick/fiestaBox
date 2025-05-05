@@ -17,8 +17,8 @@ export class Album extends Document {
   @Prop()
   password?: string;
 
-  @Prop({ type: [String], default: [] })
-  media: string[];
+  @Prop({ type: [Types.ObjectId], ref: 'Media', default: [] })
+  medias: Types.ObjectId[];
 }
 
 export const AlbumSchema = SchemaFactory.createForClass(Album);

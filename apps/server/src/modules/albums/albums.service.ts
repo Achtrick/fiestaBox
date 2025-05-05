@@ -5,7 +5,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { BaseService } from '../../shared/generic-apis/service/base.service';
 import { Album } from './entities/album.schema';
 import { BaseRepository } from '../../shared/generic-apis/repositories/base.repository';
@@ -17,13 +17,15 @@ import {
   UploadService,
 } from '../../shared/upload/services/upload.service';
 import { File } from 'multer';
+import { MediasService } from '../medias/albums.service';
 
 @Injectable()
 export class AlbumsService extends BaseService<Album> {
   constructor(
     @InjectModel(Album.name) model: Model<Album>,
     @Inject(ALBUMS_REPOSITORY) private readonly albumRepo: IAlbumRepository,
-    private readonly uploadService: UploadService
+    private readonly uploadService: UploadService,
+    private readonly mediaService: MediasService
   ) {
     super(new BaseRepository<Album>(model));
   }
@@ -48,7 +50,22 @@ export class AlbumsService extends BaseService<Album> {
     if (!files || files?.length === 0) {
       throw new BadRequestException('No files provided for upload');
     }
+    const results: UploadedMedia[] = await this.uploadService.uploadfiles(
+      files,
+      mediaUploadOptions
+    );
 
-    return this.uploadService.uploadfiles(files, mediaUploadOptions);
+    results.forEach(async (media) => {
+      await this.mediaService.create({
+        albumId: albumId as any,
+        mimeType: media.type,
+        originalName: media.originalName,
+        filename: media.filename,
+        path: media.path,
+        thumbnailPath: media.thumbnailPath,
+      });
+    });
+
+    return results;
   }
 }
