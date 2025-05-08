@@ -5,7 +5,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { BaseService } from '../../shared/generic-apis/service/base.service';
 import { Album } from './entities/album.schema';
 import { BaseRepository } from '../../shared/generic-apis/repositories/base.repository';
@@ -17,7 +17,7 @@ import {
   UploadService,
 } from '../../shared/upload/services/upload.service';
 import { File } from 'multer';
-import { MediasService } from '../medias/albums.service';
+import { MediasService } from '../medias/medias.service';
 
 @Injectable()
 export class AlbumsService extends BaseService<Album> {
@@ -55,16 +55,19 @@ export class AlbumsService extends BaseService<Album> {
       mediaUploadOptions
     );
 
-    results.forEach(async (media) => {
-      await this.mediaService.create({
-        albumId: albumId as any,
-        mimeType: media.type,
-        originalName: media.originalName,
-        filename: media.filename,
-        path: media.path,
-        thumbnailPath: media.thumbnailPath,
-      });
-    });
+    await this.mediaService.insertMany(
+      results.map((media) => {
+        return {
+          albumId: albumId as any,
+          mimeType: media.type,
+          originalName: media.originalName,
+          filename: media.filename,
+          path: media.path,
+          thumbnailPath: media.thumbnailPath,
+          size: media.size,
+        };
+      })
+    );
 
     return results;
   }

@@ -1,13 +1,5 @@
-import {
-  IsString,
-  IsOptional,
-  IsMongoId,
-  IsArray,
-  ArrayNotEmpty,
-  ArrayUnique,
-} from 'class-validator';
+import { IsString, IsOptional, IsMongoId, IsNumber } from 'class-validator';
 import { Types } from 'mongoose';
-import { IsUnique } from '../../../common/decorators/is-unique.decorator';
 
 export class CreateMediaDto {
   @IsMongoId()
@@ -25,7 +17,7 @@ export class CreateMediaDto {
   @IsString()
   mimeType: string;
 
-  @IsString()
+  @IsNumber()
   size: string;
 
   @IsOptional()

@@ -28,6 +28,7 @@ export interface UploadedMedia {
   originalName: string;
   filename: string;
   path: string;
+  size: number; // in bytes
   thumbnailPath?: string;
 }
 
@@ -55,6 +56,7 @@ export class UploadService {
       fs.mkdirSync(baseFolder, { recursive: true });
 
     const results: UploadedMedia[] = [];
+
     for (const file of files) {
       const mime = file.mimetype;
       const isImage = mime.startsWith('image/');
@@ -83,11 +85,14 @@ export class UploadService {
         fs.renameSync(file.path, destPath);
       }
 
+      const stats = fs.statSync(destPath); // Get file stats (including size)
+
       const record: UploadedMedia = {
         type: isImage ? 'image' : isVideo ? 'video' : 'audio',
         originalName: file.originalname,
         filename,
         path: destPath,
+        size: stats.size, // Add file size in bytes
       };
 
       // thumbnail for video , only works for disk storage

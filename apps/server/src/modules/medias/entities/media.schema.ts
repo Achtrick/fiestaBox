@@ -21,7 +21,7 @@ export class Media extends Document {
   mimeType: string;
 
   @Prop()
-  size: string;
+  size: number;
 
   @Prop()
   thumbnailPath?: string;

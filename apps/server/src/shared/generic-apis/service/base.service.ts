@@ -4,7 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BaseRepository } from '../repositories/base.repository';
-import { Document } from 'mongoose';
+import {
+  Document,
+  FilterQuery,
+  PipelineStage,
+  UpdateQuery,
+  AggregateOptions,
+} from 'mongoose';
 
 @Injectable()
 export class BaseService<T extends Document> {
@@ -14,8 +20,16 @@ export class BaseService<T extends Document> {
     return this.repo.create(dto);
   }
 
-  async findAll(filter?: object): Promise<T[]> {
+  async insertMany(dtos: Partial<T>[]): Promise<T[]> {
+    return this.repo.insertMany(dtos);
+  }
+
+  async findAll(filter?: FilterQuery<T>): Promise<T[]> {
     return this.repo.findAll(filter);
+  }
+
+  async findOne(filter: FilterQuery<T>): Promise<T | null> {
+    return this.repo.findOne(filter);
   }
 
   async findById(id: string): Promise<T | null> {
@@ -37,11 +51,48 @@ export class BaseService<T extends Document> {
         `Invalid properties in DTO: ${invalidKeys.join(', ')}`
       );
     }
-    return this.repo.update(id, dto);
+    return this.repo.update(id, dto as UpdateQuery<T>);
   }
 
   async remove(id: string): Promise<void> {
     await this.findById(id);
     return this.repo.delete(id);
+  }
+
+  async deleteMany(filter: FilterQuery<T>): Promise<{ deletedCount?: number }> {
+    return this.repo.deleteMany(filter);
+  }
+
+  async count(filter: FilterQuery<T> = {}): Promise<number> {
+    return this.repo.count(filter);
+  }
+
+  async paginate(
+    filter: FilterQuery<T> = {},
+    options?: {
+      page?: number;
+      limit?: number;
+      sort?:
+        | string
+        | { [key: string]: object | { $meta: any } }
+        | [string, object][]
+        | undefined
+        | null;
+    }
+  ): Promise<{
+    docs: T[];
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  }> {
+    return this.repo.paginate(filter, options);
+  }
+
+  async aggregate<U>(
+    pipeline: PipelineStage[],
+    options?: AggregateOptions
+  ): Promise<U[]> {
+    return this.repo.aggregate<U>(pipeline, options);
   }
 }
