@@ -20,5 +20,5 @@ export interface IEventDto extends IMongo {
   type: EventType;
   coverPhoto?: string;
   password?: string;
-  userId?: Types.ObjectId;
+  userId: Types.ObjectId;
 }

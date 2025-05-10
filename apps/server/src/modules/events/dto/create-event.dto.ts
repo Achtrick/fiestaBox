@@ -46,5 +46,5 @@ export class CreateEventDto {
   @IsMongoId()
   // optional to not cause any validation problem
   @IsOptional()
-  userId: Types.ObjectId;
+  readonly userId: Types.ObjectId;
 }

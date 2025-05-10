@@ -25,7 +25,7 @@ export class Event extends Document<Types.ObjectId> implements IEventDto {
   readonly password?: string;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
+  readonly userId: Types.ObjectId;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
