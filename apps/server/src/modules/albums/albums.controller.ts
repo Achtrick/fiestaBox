@@ -32,6 +32,7 @@ import { diskStorage } from 'multer';
 import { File } from 'multer';
 import { join } from 'path';
 import { UploadOptions } from '../../shared/upload/interfaces/upload-options.interface';
+import { Types } from 'mongoose';
 
 export class IdParamDto {
   @IsMongoId() // ← ensures “id” is a 24‑hex string
@@ -61,6 +62,7 @@ export class AlbumsController {
     (data: AlbumDocument) => `Album created successfully with ID: ${data._id}`
   )
   async create(@Body() createEventDto: CreateAlbumDto) {
+    createEventDto.eventId = new Types.ObjectId(createEventDto.eventId);
     return this.albumService.create(createEventDto);
   }
 
@@ -209,6 +211,12 @@ export class AlbumsController {
     }
   }
 
+  /**
+   * ------------------------------ get media stream from album
+   * @param albumId
+   * @param filename
+   * @returns
+   */
   @Get(':id/filestream/:filename')
   async getFileStream(
     @Param(new ValidationPipe({ transform: true }))

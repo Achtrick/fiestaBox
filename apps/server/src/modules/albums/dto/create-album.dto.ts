@@ -1,11 +1,4 @@
-import {
-  IsString,
-  IsOptional,
-  IsMongoId,
-  IsArray,
-  ArrayNotEmpty,
-  ArrayUnique,
-} from 'class-validator';
+import { IsString, IsOptional, IsMongoId, IsHexColor } from 'class-validator';
 import { Types } from 'mongoose';
 import { IsUnique } from '../../../common/decorators/is-unique.decorator';
 
@@ -18,7 +11,7 @@ export class CreateAlbumDto {
   name: string;
 
   @IsOptional()
-  @IsString()
+  @IsHexColor()
   color?: string;
 
   @IsOptional()
