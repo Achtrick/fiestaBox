@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { IJwtPayload } from '../interfaces/jwt.payload.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,8 +13,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
-    // The payload should contain a sub and email; return them to request.user.
-    return { userId: payload.sub, email: payload.email, role: payload.role };
+  async validate(payload: IJwtPayload) {
+    // this will add which ever returned here to the express Request interface in the property user
+    return payload;
   }
 }

@@ -8,10 +8,10 @@ import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from '../users/users.service';
 import { UserRole } from '@dto-interfaces';
 import { MailerService } from '../../common/mail/mailer.service';
+import { IJwtPayload } from './interfaces/jwt.payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +40,11 @@ export class AuthService {
       throw new UnauthorizedException('Email not verified');
     }
 
-    const payload = { sub: user._id, email: user.email, role: user.role };
+    const payload: IJwtPayload = {
+      userId: user._id as string,
+      email: user.email,
+      role: user.role,
+    };
 
     return {
       token: this.jwtService.sign(payload),
