@@ -5,7 +5,7 @@ import { Document, Types } from 'mongoose';
 export type EventDocument = Event & Document;
 
 @Schema({ timestamps: true })
-export class Event implements IEventDto {
+export class Event extends Document<Types.ObjectId> implements IEventDto {
   @Prop({ required: true, type: String })
   readonly name: string;
 
@@ -24,8 +24,8 @@ export class Event implements IEventDto {
   @Prop({ required: false, type: String })
   readonly password?: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Album' }], default: [] })
-  albums: Types.ObjectId[];
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

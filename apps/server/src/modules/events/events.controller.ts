@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Inject,
+  ValidationPipe,
+  Req,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { Event, EventDocument } from './entities/event.schema';
@@ -17,7 +19,14 @@ import { Owner } from '../../common/decorators/owner.decorator';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { OwnerGuard } from '../../common/guards/owner.guard';
 import { EVENTS_SERVICE } from './events.service.tokens';
-import { AdminGuard } from '../../common/guards/admin.guard';
+import { IsMongoId } from 'class-validator';
+import { Request } from 'express';
+import { Types } from 'mongoose';
+
+export class IdParamDto {
+  @IsMongoId() // ← ensures “id” is a 24‑hex string
+  id: string;
+}
 
 @Controller('events')
 export class EventsController {
@@ -25,13 +34,16 @@ export class EventsController {
     @Inject(EVENTS_SERVICE) private readonly eventsService: EventsService
   ) {}
 
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @SuccessMessage(
     (data: EventDocument) => `Event created successfully with ID: ${data._id}`
   )
-  async create(@Body() createEventDto: CreateEventDto) {
-    return this.eventsService.createEvent(createEventDto);
+  async create(@Body() createEventDto: CreateEventDto, @Req() req: Request) {
+    return this.eventsService.create({
+      ...createEventDto,
+      userId: new Types.ObjectId(req.user.userId),
+    });
   }
 
   @Get(':id')
@@ -40,7 +52,7 @@ export class EventsController {
       `Event with ID:${data._id} is retrieved successfully!`
   )
   async findOne(@Param('id') id: string) {
-    return this.eventsService.findEventById(id);
+    return this.eventsService.findById(id);
   }
 
   @UseGuards(JwtAuthGuard, OwnerGuard)
@@ -58,19 +70,19 @@ export class EventsController {
     @Param('id') id: string,
     @Body() updateEventDto: Partial<Event>
   ) {
-    return this.eventsService.updateEvent(id, updateEventDto);
+    return this.eventsService.update(id, updateEventDto);
   }
 
   @Delete(':id')
   @SuccessMessage('event deleted successfully!')
   async remove(@Param('id') id: string) {
-    return this.eventsService.deleteEvent(id);
+    return this.eventsService.remove(id);
   }
 
   @Get()
   @SuccessMessage('All events have been successfully retrieved!')
   async findAll(@Param('filter') filter: object) {
-    return this.eventsService.findAllEvent(filter);
+    return this.eventsService.findAll(filter);
   }
 
   @Get('name/:name')
@@ -80,5 +92,13 @@ export class EventsController {
   )
   async findOneByName(@Param('name') name: string) {
     return await this.eventsService.findEventByName(name);
+  }
+
+  @Get(':id/isUploadLimitReached')
+  async isUploadLimitReached(
+    @Param(new ValidationPipe({ transform: true }))
+    params: IdParamDto
+  ) {
+    return await this.eventsService.isUploadLimitReached(params.id);
   }
 }

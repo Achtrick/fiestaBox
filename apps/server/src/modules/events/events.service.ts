@@ -1,56 +1,25 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
-import { CreateEventDto } from './dto/create-event.dto';
 import { Event, EventDocument } from './entities/event.schema';
 import { IEventRepository } from './repositories/event.repository.interface';
 import { EVENT_REPOSITORY } from './events.service.tokens';
+import { EVENT_TYPE_SIZE_LIMITS } from '@dto-interfaces';
+import { MediasService } from '../medias/medias.service';
+import { AlbumsService } from '../albums/albums.service';
+import { BaseService } from '../../shared/generic-apis/service/base.service';
+import { BaseRepository } from '../../shared/generic-apis/repositories/base.repository';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class EventsService {
+export class EventsService extends BaseService<Event> {
   // Using a custom injection token to get the repository implementation.
   constructor(
-    @Inject(EVENT_REPOSITORY) private readonly eventRepo: IEventRepository
-  ) {}
-
-  /**
-   * Creates a new event based on the provided CreateEventDto.
-   */
-  async createEvent(data: CreateEventDto): Promise<EventDocument> {
-    return this.eventRepo.create(data);
-  }
-
-  /**
-   * Finds an event by its ID.
-   * Throws NotFoundException if the event does not exist.
-   */
-  async findEventById(id: string): Promise<EventDocument> {
-    const event = await this.eventRepo.findById(id);
-    if (!event) {
-      throw new NotFoundException(`Event with id ${id} not found`);
-    }
-    return event;
-  }
-
-  /**
-   * Updates an existing event.
-   */
-  async updateEvent(id: string, data: Partial<Event>): Promise<EventDocument> {
-    return this.eventRepo.update(id, data);
-  }
-
-  /**
-   * Deletes an event by its ID.
-   */
-  async deleteEvent(id: string): Promise<void> {
-    return this.eventRepo.delete(id);
-  }
-
-  /**
-   * returns all events. if a filter is provided, return filtered events.
-   * @param filter - optional filter object to filter events
-   * @returns - array of events
-   */
-  async findAllEvent(filter?: object): Promise<EventDocument[]> {
-    return this.eventRepo.findAll(filter);
+    @InjectModel(Event.name) model: Model<Event>,
+    @Inject(EVENT_REPOSITORY) private readonly eventRepo: IEventRepository,
+    private readonly mediaService: MediasService,
+    private readonly albumService: AlbumsService
+  ) {
+    super(new BaseRepository<Event>(model));
   }
 
   /**
@@ -63,5 +32,34 @@ export class EventsService {
       throw new NotFoundException(`Event with name ${name} not found`);
     }
     return event;
+  }
+
+  /**
+   * Checks if the upload limit for a specific event type has been reached.
+   * @param eventId - The ID of the event to check.
+   * @returns - true if the upload limit is reached, false otherwise.
+   */
+  async isUploadLimitReached(eventId: string): Promise<boolean> {
+    const event = await super.findById(eventId);
+
+    const limit = EVENT_TYPE_SIZE_LIMITS[event.type];
+
+    const albums = await this.albumService.findAll({ eventId });
+    if (albums.length === 0) return false;
+
+    const albumIds = albums.map((album) => album._id.toString());
+
+    const result = await this.mediaService.aggregate<{ totalSize: number }>([
+      { $match: { albumId: { $in: albumIds } } },
+      {
+        $group: {
+          _id: null,
+          totalSize: { $sum: '$size' },
+        },
+      },
+    ]);
+
+    const totalSize = result[0]?.totalSize ?? 0;
+    return totalSize >= limit;
   }
 }

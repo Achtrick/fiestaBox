@@ -5,10 +5,14 @@ import { EventsService } from './events.service';
 import { Event, EventSchema } from './entities/event.schema';
 import { EventRepository } from './repositories/event.repository';
 import { EVENT_REPOSITORY, EVENTS_SERVICE } from './events.service.tokens';
+import { MediasModule } from '../medias/medias.module';
+import { AlbumsModule } from '../albums/albums.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
+    MediasModule,
+    AlbumsModule,
   ],
   controllers: [EventsController],
   providers: [

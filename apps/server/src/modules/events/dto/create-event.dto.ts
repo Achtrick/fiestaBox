@@ -1,14 +1,16 @@
 import {
   IsDateString,
   IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import { EventType, IEventDto } from '@dto-interfaces';
+import { EventType } from '@dto-interfaces';
+import { Types } from 'mongoose';
 
-export class CreateEventDto implements IEventDto {
+export class CreateEventDto {
   @IsNotEmpty()
   @IsString()
   readonly name: string;
@@ -40,4 +42,9 @@ export class CreateEventDto implements IEventDto {
     minSymbols: 0,
   })
   readonly password?: string;
+
+  @IsMongoId()
+  // optional to not cause any validation problem
+  @IsOptional()
+  userId: Types.ObjectId;
 }
