@@ -12,15 +12,17 @@ import { File } from 'multer';
 @Injectable()
 export class DiskStorageProvider implements StorageProvider {
   constructor(private options: DiskProviderOptions) {
-    // Ensure the upload directory exists
-    if (!fs.existsSync(options.destination)) {
-      fs.mkdirSync(options.destination, { recursive: true });
-    }
+    this.ensureDirectoryExist(options.destination);
   }
 
-  async upload(file: File): Promise<UploadedFile> {
-    const filename = `${uuidv4()}-${file.originalname}`;
-    const destinationPath = path.join(this.options.destination, filename);
+  async upload(file: File, destination?: string): Promise<UploadedFile> {
+    let destinationPath = '';
+    if (destination) {
+      destinationPath = destination;
+    } else {
+      const filename = `${uuidv4()}-${file.originalname}`;
+      destinationPath = path.join(this.options.destination, filename);
+    }
 
     // Case A: memoryStorage → file.buffer
     if (file.buffer) {
@@ -36,7 +38,6 @@ export class DiskStorageProvider implements StorageProvider {
 
     return {
       originalname: file.originalname,
-      filename,
       path: destinationPath,
       size: file.size,
       mimetype: file.mimetype,
@@ -68,6 +69,12 @@ export class DiskStorageProvider implements StorageProvider {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  ensureDirectoryExist(destination: string): void {
+    if (!fs.existsSync(destination)) {
+      fs.mkdirSync(destination, { recursive: true });
     }
   }
 

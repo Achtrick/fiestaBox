@@ -11,6 +11,7 @@ import { OwnerGuard } from '../common/guards/owner.guard';
 import { JwtAuthGuard } from '../common/guards/auth.guard';
 import { AdminGuard } from '../common/guards/admin.guard';
 import { join } from 'path';
+import { UPLOAD_FOLDER } from '../shared/upload/constants/upload.constants';
 
 @Module({
   imports: [
@@ -19,8 +20,8 @@ import { join } from 'path';
     featuresModule,
     // serve anything under dist/apps/server/uploads at http://<host>/uploads/*
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, 'uploads'),
-      serveRoot: '/uploads',
+      rootPath: join(__dirname, UPLOAD_FOLDER),
+      serveRoot: `/${UPLOAD_FOLDER}`,
     }),
   ],
   controllers: [AppController],

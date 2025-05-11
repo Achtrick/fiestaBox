@@ -48,9 +48,7 @@ export class UploadService {
 
     console.log('baseFolder ===> ', baseFolder);
 
-    // ensure base folder
-    if (!fs.existsSync(baseFolder))
-      fs.mkdirSync(baseFolder, { recursive: true });
+    this.storageProvider.ensureDirectoryExist(baseFolder);
 
     const results: UploadedMedia[] = [];
 
@@ -69,7 +67,7 @@ export class UploadService {
       if (isVideo && generateVideoThumbnails) {
         const sub = uuidv4();
         targetFolder = join(baseFolder, sub);
-        fs.mkdirSync(targetFolder, { recursive: true });
+        this.storageProvider.ensureDirectoryExist(targetFolder);
       }
 
       // move or write
@@ -78,20 +76,16 @@ export class UploadService {
 
       console.log('destPath ===> ', destPath);
 
-      if (file.buffer) {
-        fs.writeFileSync(destPath, file.buffer);
-      } else if (file.path) {
-        fs.renameSync(file.path, destPath);
-      }
+      const uploadedFile = await this.storageProvider.upload(file, destPath);
 
-      const stats = fs.statSync(destPath); // Get file stats (including size)
+      //const stats = fs.statSync(destPath); // Get file stats (including size)
 
       const record: UploadedMedia = {
         type: isImage ? 'image' : isVideo ? 'video' : 'audio',
         originalName: file.originalname,
         filename,
         path: this._getPathAfterFolder(destPath, UPLOAD_FOLDER),
-        size: stats.size, // Add file size in bytes
+        size: uploadedFile.size, // Add file size in bytes
       };
 
       // thumbnail for video , only works for disk storage
@@ -101,10 +95,8 @@ export class UploadService {
         const thumbPath = join(targetFolder, thumbName);
 
         // use destPath (moved file) for both duration-check and existence
-        if (
-          fs.existsSync(destPath) &&
-          (await this._getVideoDuration(destPath)) > 1
-        ) {
+        this.storageProvider.ensureDirectoryExist(destPath);
+        if ((await this._getVideoDuration(destPath)) > 1) {
           await this._extractThumbnail(destPath, thumbPath);
           record.thumbnailPath = thumbPath;
         }
