@@ -46,8 +46,6 @@ export class UploadService {
   ): Promise<UploadedMedia[]> {
     const { baseFolder, generateVideoThumbnails = true } = options;
 
-    console.log('baseFolder ===> ', baseFolder);
-
     this.storageProvider.ensureDirectoryExist(baseFolder);
 
     const results: UploadedMedia[] = [];
@@ -74,8 +72,6 @@ export class UploadService {
       const filename = `${uuidv4()}-${file.originalname}`;
       const destPath = join(targetFolder, filename);
 
-      console.log('destPath ===> ', destPath);
-
       const uploadedFile = await this.storageProvider.upload(file, destPath);
 
       //const stats = fs.statSync(destPath); // Get file stats (including size)
@@ -98,7 +94,10 @@ export class UploadService {
         this.storageProvider.ensureDirectoryExist(destPath);
         if ((await this._getVideoDuration(destPath)) > 1) {
           await this._extractThumbnail(destPath, thumbPath);
-          record.thumbnailPath = thumbPath;
+          record.thumbnailPath = this._getPathAfterFolder(
+            thumbPath,
+            UPLOAD_FOLDER
+          );
         }
       }
 

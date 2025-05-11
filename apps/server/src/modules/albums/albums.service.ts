@@ -18,6 +18,7 @@ import {
 } from '../../shared/upload/services/upload.service';
 import { File } from 'multer';
 import { MediasService } from '../medias/medias.service';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AlbumsService extends BaseService<Album> {
@@ -58,7 +59,7 @@ export class AlbumsService extends BaseService<Album> {
     await this.mediaService.insertMany(
       results.map((media) => {
         return {
-          albumId: albumId as any,
+          albumId: new Types.ObjectId(albumId),
           mimeType: media.type,
           originalName: media.originalName,
           filename: media.filename,

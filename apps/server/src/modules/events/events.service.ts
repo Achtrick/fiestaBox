@@ -7,7 +7,7 @@ import { MediasService } from '../medias/medias.service';
 import { AlbumsService } from '../albums/albums.service';
 import { BaseService } from '../../shared/generic-apis/service/base.service';
 import { BaseRepository } from '../../shared/generic-apis/repositories/base.repository';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -44,10 +44,13 @@ export class EventsService extends BaseService<Event> {
 
     const limit = EVENT_TYPE_SIZE_LIMITS[event.type];
 
-    const albums = await this.albumService.findAll({ eventId });
+    const albums = await this.albumService.findAll({
+      eventId: new Types.ObjectId(eventId),
+    });
+
     if (albums.length === 0) return false;
 
-    const albumIds = albums.map((album) => album._id.toString());
+    const albumIds = albums.map((album) => album._id);
 
     const result = await this.mediaService.aggregate<{ totalSize: number }>([
       { $match: { albumId: { $in: albumIds } } },
