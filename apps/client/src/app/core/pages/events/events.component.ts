@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EventType, IEventDto } from '@dto-interfaces';
+import { Types } from 'mongoose';
 import { Action } from '../../../models/Action.model';
 import { ActionButton } from '../../components/action-button/action-button.component';
 import { EventFormComponent } from '../../components/events/event-form.component';
@@ -28,7 +29,8 @@ import { EventTypeColorPipe } from '../../pipes/event-type-color.pipe';
 export class EventsComponent {
   public events: IEventDto[] = [
     {
-      _id: '1',
+      userId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'Startup Meetup',
       coverPhoto:
         'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
@@ -37,7 +39,8 @@ export class EventsComponent {
       description: '---',
     },
     {
-      _id: '2',
+      userId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'Developer Bootcamp',
       coverPhoto:
         'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
@@ -46,39 +49,13 @@ export class EventsComponent {
       description: '---',
     },
     {
-      _id: '3',
+      userId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'Cybersecurity Workshop',
       coverPhoto:
         'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
       startDate: new Date('2025-09-12'),
       type: EventType.FREE,
-      description: '---',
-    },
-    {
-      _id: '4',
-      name: 'Cloud Architecture Panel',
-      coverPhoto:
-        'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=400',
-      startDate: new Date('2025-11-01'),
-      type: EventType.SILVER,
-      description: '---',
-    },
-    {
-      _id: '5',
-      name: 'Startup Meetup',
-      coverPhoto:
-        'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      startDate: new Date('2025-06-10'),
-      type: EventType.FREE,
-      description: '---',
-    },
-    {
-      _id: '6',
-      name: 'Developer Bootcamp',
-      coverPhoto:
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      startDate: new Date('2025-07-01'),
-      type: EventType.GOLD,
       description: '---',
     },
   ];

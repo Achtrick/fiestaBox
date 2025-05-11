@@ -1,3 +1,5 @@
-<navigation *ngIf="authService.isAuthenticated()">
+@if (authService.isAuthenticated()) {
+<navigation>
   <router-outlet></router-outlet>
 </navigation>
+} @else {<router-outlet></router-outlet>}

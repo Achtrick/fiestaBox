@@ -2,12 +2,25 @@
   <img src="circle.svg" alt="circle" />
   <img src="circle.svg" alt="circle" />
   <div class="content">
-    <form>
+    <form (submit)="login($event)">
       <h1>Login</h1>
       <p>Please sign in to continue.</p>
-      <input placeholder="email" class="default-input" />
-      <input placeholder="password" class="default-input" />
-      <button class="default-button">login</button>
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="email"
+        name="email"
+        class="default-input"
+        required
+      />
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="password"
+        name="password"
+        [type]="showPassword ? 'text' : 'password'"
+        class="default-input"
+        required
+      />
+      <button class="default-button" type="submit">login</button>
     </form>
   </div>
   <p>

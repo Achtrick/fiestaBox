@@ -1,9 +1,9 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
-import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { useContainer } from 'class-validator';
+import { AppModule } from './app/app.module';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +26,11 @@ async function bootstrap() {
   app.useGlobalInterceptors(transformInterceptor);
 
   app.useGlobalFilters(new AllExceptionsFilter());
+
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  });
 
   process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);

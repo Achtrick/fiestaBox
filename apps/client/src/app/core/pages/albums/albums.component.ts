@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Action } from '../../../models/Action.model';
 
 import { IAlbumDto } from '@dto-interfaces';
+import { Types } from 'mongoose';
 import { ActionButton } from '../../components/action-button/action-button.component';
 import {
   ContextMenuComponent,
@@ -34,7 +35,8 @@ import { LongPressDirective } from '../../directives/long-press.directive';
 export class AlbumsComponent implements OnInit {
   public albums: IAlbumDto[] = [
     {
-      _id: '1',
+      eventId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'the reception',
       color: '#000000',
       media: [],
@@ -42,14 +44,16 @@ export class AlbumsComponent implements OnInit {
       password: 'blabla',
     },
     {
-      _id: '1',
+      eventId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'the introduction',
       color: '#ff00ff',
       media: [],
       mediaCount: 5,
     },
     {
-      _id: '1',
+      eventId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'the coffe break',
       color: '#00ff00',
       media: [],
@@ -57,7 +61,8 @@ export class AlbumsComponent implements OnInit {
       password: 'blabla',
     },
     {
-      _id: '1',
+      eventId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
+      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
       name: 'the conclusion and awards',
       color: '#dc9b1b',
       media: [],
@@ -116,7 +121,7 @@ export class AlbumsComponent implements OnInit {
 
   public openContextMenu(
     position: { x: string; y: string },
-    albumId: string
+    albumId: Types.ObjectId
   ): void {
     this.contextMenuPosition.set(position);
     this.contextMenuVisible.set(true);

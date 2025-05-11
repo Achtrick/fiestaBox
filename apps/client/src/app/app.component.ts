@@ -1,8 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect, ViewContainerRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NavigationComponent } from './core/components/navigation/navigation.component';
+import {
+  ToastAnimation,
+  ToastComponent,
+  ToastPosition,
+  ToastSettings,
+  ToastType,
+} from './core/components/toast/toast.component';
 import { AuthService } from './services/auth.service';
+import { SharedService } from './services/shared.service';
 
 @Component({
   imports: [RouterModule, NavigationComponent, CommonModule],
@@ -11,7 +19,34 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private sharedService: SharedService,
+    private vcr: ViewContainerRef
+  ) {
+    effect(() => {
+      if (this.sharedService.toastSettings()) {
+        this.showToast(this.sharedService.toastSettings());
+      }
+    });
+  }
+
+  private showToast = (settings: ToastSettings) => {
+    let componentRef = this.vcr.createComponent(ToastComponent);
+    const toast = componentRef.instance;
+
+    toast.type = settings.type ?? ToastType.Info;
+    toast.position = settings.position ?? ToastPosition.Top;
+    toast.animation = settings.animation ?? ToastAnimation.FadeOut;
+    toast.hideAfter = settings.hideAfter ?? 5000;
+    toast.message = settings.message;
+
+    toast.open();
+
+    toast.OnHiding.subscribe(() => {
+      componentRef.destroy();
+    });
+  };
 }
 
 export const IconRegistry = {

@@ -1,8 +1,9 @@
+import { IResponse } from '@dto-interfaces';
 import {
+  CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
-  ExecutionContext,
-  CallHandler,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, map } from 'rxjs';
@@ -10,7 +11,6 @@ import {
   SUCCESS_MESSAGE_KEY,
   SuccessMessageType,
 } from '../decorators/success-message.decorator';
-import { IResponse } from '../interfaces/response.interface';
 
 @Injectable()
 export class TransformInterceptor<T>
