@@ -1,13 +1,9 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import {
-  STORAGE_PROVIDER,
-  UPLOAD_OPTIONS,
-} from '../constants/upload.constants';
+import { STORAGE_PROVIDER, UPLOAD_FOLDER } from '../constants/upload.constants';
 import {
   StorageProvider,
   UploadedFile,
 } from '../interfaces/storage-provider.interface';
-import { UploadOptions } from '../interfaces/upload-options.interface';
 import { ReadStream } from 'fs';
 import { File } from 'multer';
 import { extname, basename, join, dirname } from 'path';
@@ -35,7 +31,6 @@ export interface UploadedMedia {
 @Injectable()
 export class UploadService {
   constructor(
-    @Inject(UPLOAD_OPTIONS) private defaultOptions: UploadOptions,
     @Inject(STORAGE_PROVIDER) private storageProvider: StorageProvider
   ) {
     FfmpegCommand.setFfmpegPath(ffmpegPath);
@@ -50,6 +45,8 @@ export class UploadService {
     options: MediaUploadOptions
   ): Promise<UploadedMedia[]> {
     const { baseFolder, generateVideoThumbnails = true } = options;
+
+    console.log('baseFolder ===> ', baseFolder);
 
     // ensure base folder
     if (!fs.existsSync(baseFolder))
@@ -79,6 +76,8 @@ export class UploadService {
       const filename = `${uuidv4()}-${file.originalname}`;
       const destPath = join(targetFolder, filename);
 
+      console.log('destPath ===> ', destPath);
+
       if (file.buffer) {
         fs.writeFileSync(destPath, file.buffer);
       } else if (file.path) {
@@ -91,7 +90,7 @@ export class UploadService {
         type: isImage ? 'image' : isVideo ? 'video' : 'audio',
         originalName: file.originalname,
         filename,
-        path: destPath,
+        path: this._getPathAfterFolder(destPath, UPLOAD_FOLDER),
         size: stats.size, // Add file size in bytes
       };
 
@@ -155,5 +154,17 @@ export class UploadService {
         resolve(metadata.format.duration); // in seconds
       });
     });
+  }
+
+  private _getPathAfterFolder(
+    fullPath: string,
+    folderName: string
+  ): string | null {
+    const index = fullPath.indexOf(folderName);
+
+    if (index === -1) return null; // folder not found
+
+    const afterFolderIndex = index + folderName.length;
+    return fullPath.substring(afterFolderIndex).replace(/^\/|\\/, ''); // remove leading slash/backslash
   }
 }

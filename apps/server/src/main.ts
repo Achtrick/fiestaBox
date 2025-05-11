@@ -35,6 +35,8 @@ async function bootstrap() {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   });
 
+  app.enableCors({ origin: '*' });
+
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`

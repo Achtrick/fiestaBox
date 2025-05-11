@@ -9,6 +9,7 @@ import { IsUniqueConstraint } from '../../common/validators/is-unique.validator'
 import { UploadModule } from '../../shared/upload/upload.module';
 import path from 'path';
 import { MediasModule } from '../medias/medias.module';
+import { UPLOAD_FOLDER } from '../../shared/upload/constants/upload.constants';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { MediasModule } from '../medias/medias.module';
     UploadModule.register({
       provider: 'disk',
       providerOptions: {
-        destination: path.join(__dirname, '../../../uploads/albums'),
+        destination: path.join(__dirname, `../../../${UPLOAD_FOLDER}/albums`),
       },
     }),
     MediasModule,

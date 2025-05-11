@@ -33,6 +33,7 @@ import { File } from 'multer';
 import { join } from 'path';
 import { UploadOptions } from '../../shared/upload/interfaces/upload-options.interface';
 import { Types } from 'mongoose';
+import { UPLOAD_FOLDER } from '../../shared/upload/constants/upload.constants';
 
 export class IdParamDto {
   @IsMongoId() // ← ensures “id” is a 24‑hex string
@@ -156,7 +157,7 @@ export class AlbumsController {
   @UseInterceptors(
     FilesInterceptor('files', 20, {
       storage: diskStorage({
-        destination: 'uploads/tmp',
+        destination: `${UPLOAD_FOLDER}/tmp`,
         filename: (_, f, cb) => cb(null, f.originalname),
       }),
       fileFilter: (_, file, cb) => {

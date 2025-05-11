@@ -11,15 +11,12 @@ import { Response } from 'express';
 import { UploadService } from '../services/upload.service';
 import { UPLOAD_OPTIONS } from '../constants/upload.constants';
 import { UploadOptions } from '../interfaces/upload-options.interface';
-import { Reflector } from '@nestjs/core';
-import { File } from 'multer';
 
 @Controller('uploads')
 export class UploadController {
   constructor(
     private readonly uploadService: UploadService,
-    @Inject(UPLOAD_OPTIONS) private defaultOptions: UploadOptions,
-    private reflector: Reflector
+    @Inject(UPLOAD_OPTIONS) private defaultOptions: UploadOptions
   ) {}
 
   // Original routes remain the same
