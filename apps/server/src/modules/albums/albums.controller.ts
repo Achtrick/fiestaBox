@@ -13,6 +13,7 @@ import {
   UploadedFiles,
   Inject,
   Res,
+  Query,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
@@ -34,6 +35,7 @@ import { join } from 'path';
 import { UploadOptions } from '../../shared/upload/interfaces/upload-options.interface';
 import { Types } from 'mongoose';
 import { UPLOAD_FOLDER } from '../../shared/upload/constants/upload.constants';
+import { MediasService } from '../medias/medias.service';
 
 export class IdParamDto {
   @IsMongoId() // ← ensures “id” is a 24‑hex string
@@ -232,5 +234,21 @@ export class AlbumsController {
       console.error('Error retrieving file:', error);
       res.status(500).send('Error retrieving file');
     }
+  }
+
+  /**
+   * ------------------------------ get media from album
+   * @param albumId
+   * @param limit
+   * @param offset
+   * @returns
+   */
+  @Get(':albumId/media')
+  async listMedia(
+    @Param('albumId') albumId: string,
+    @Query('limit') limit = 20,
+    @Query('offset') offset = 0
+  ) {
+    return this.albumService.getMediaByAlbum(albumId, limit, offset);
   }
 }

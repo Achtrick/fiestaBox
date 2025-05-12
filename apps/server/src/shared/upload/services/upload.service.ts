@@ -40,6 +40,13 @@ export class UploadService {
     return this.storageProvider.upload(file);
   }
 
+  /**
+   * upload images,videos and audios
+   * @param files only accepts images,videos and audios
+   * @param options baseFolder and an optional boolean generateVideoThumbnails
+   * @returns
+   */
+
   async uploadfiles(
     files: File[],
     options: MediaUploadOptions
@@ -109,6 +116,10 @@ export class UploadService {
 
   async getFile(filename: string, subFolders?: string[]): Promise<Buffer> {
     return this.storageProvider.getFile(filename, subFolders);
+  }
+
+  async getFiles(filePaths: string[]): Promise<Buffer[]> {
+    return this.storageProvider.getFiles(filePaths);
   }
 
   async getFileStream(

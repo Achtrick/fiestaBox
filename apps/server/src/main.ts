@@ -27,10 +27,10 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  app.enableCors({
-    origin: 'http://localhost:4200',
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: 'http://localhost:4200',
+  //   credentials: true,
+  // });
 
   process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);

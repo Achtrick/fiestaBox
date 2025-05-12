@@ -4,6 +4,7 @@ import { Media, MediaSchema } from './entities/media.schema';
 import { MediasService } from './medias.service';
 import { MEDIAS_REPOSITORY } from './medias.service.tokens';
 import { MediaRepository } from './repositories/media.repository';
+import { MediasController } from './medias.controller';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MediaRepository } from './repositories/media.repository';
       useClass: MediaRepository,
     },
   ],
+  controllers: [MediasController],
   exports: [MediasService],
 })
 export class MediasModule {}

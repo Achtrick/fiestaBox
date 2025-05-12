@@ -51,6 +51,13 @@ export class DiskStorageProvider implements StorageProvider {
     return fs.promises.readFile(filePath);
   }
 
+  async getFiles(filePaths: string[]): Promise<Buffer[]> {
+    const readOperations = filePaths.map((path) => {
+      return fs.promises.readFile(path);
+    });
+    return Promise.all(readOperations);
+  }
+
   async getFileStream(
     filename: string,
     subFolders?: string[]

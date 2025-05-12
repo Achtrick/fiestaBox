@@ -19,7 +19,13 @@ import {
 import { File } from 'multer';
 import { MediasService } from '../medias/medias.service';
 import { Types } from 'mongoose';
+import { Media } from '../medias/entities/media.schema';
 
+export interface FindByAlbumOptions {
+  page?: number;
+  limit?: number;
+  sort?: any;
+}
 @Injectable()
 export class AlbumsService extends BaseService<Album> {
   constructor(
@@ -71,5 +77,61 @@ export class AlbumsService extends BaseService<Album> {
     );
 
     return results;
+  }
+
+  /**
+   *
+   * @param albumId the UUID (or PK) of the album
+   * @param limit
+   * @param offset
+   * @returns
+   */
+  async getMediaByAlbum(albumId: string, limit: number, offset: number) {
+    const page = Math.floor(offset / limit) + 1;
+
+    const { docs } = await this.findMediasByAlbum(albumId, {
+      page,
+      limit,
+      sort: { createdAt: 'desc' },
+    });
+
+    return docs.map((m) => ({
+      id: m._id,
+      name: m.filename,
+      mimeType: m.mimeType,
+    }));
+  }
+
+  /**
+   * Fetch media belonging to a given album, with optional pagination & sort.
+   *
+   * @param albumId  the UUID (or PK) of the album
+   * @param options  { take, skip, order } for pagination/sorting
+   */
+  async findMediasByAlbum(
+    albumId: string,
+    options: FindByAlbumOptions = {}
+  ): Promise<{
+    docs: Media[];
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  }> {
+    // 1) Verify album exists (and permissions)
+    await this.findById(albumId);
+
+    // 2) Destructure defaults
+    const { page = 1, limit = 20, sort = { createdAt: 'desc' } } = options;
+
+    // 3) Use generic paginate method
+    return this.mediaService.paginate(
+      { albumId: new Types.ObjectId(albumId) },
+      {
+        page,
+        limit,
+        sort,
+      }
+    );
   }
 }
