@@ -12,10 +12,8 @@ import {
   BadRequestException,
   UploadedFiles,
   Inject,
-  Res,
   Query,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { SuccessMessage } from '../../common/decorators/success-message.decorator';
 import { Album, AlbumDocument } from './entities/album.schema';
@@ -26,7 +24,6 @@ import { IsMongoId, IsOptional, IsString } from 'class-validator';
 import {
   MediaUploadOptions,
   UploadedMedia,
-  UploadService,
 } from '../../shared/upload/services/upload.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -35,8 +32,6 @@ import { join } from 'path';
 import { UploadOptions } from '../../shared/upload/interfaces/upload-options.interface';
 import { Types } from 'mongoose';
 import { UPLOAD_FOLDER } from '../../shared/upload/constants/upload.constants';
-import { MediasService } from '../medias/medias.service';
-
 export class IdParamDto {
   @IsMongoId() // ← ensures “id” is a 24‑hex string
   id: string;
@@ -50,7 +45,6 @@ export class IdParamDto {
 export class AlbumsController {
   constructor(
     protected readonly albumService: AlbumsService,
-    private readonly uploadService: UploadService,
     @Inject('UPLOAD_OPTIONS') private uploadOptions: UploadOptions
   ) {}
 
@@ -190,50 +184,6 @@ export class AlbumsController {
     };
 
     return this.albumService.uploadMedias(params.id, files, mediaUploadOptions);
-  }
-
-  /**
-   * ------------------------------ get media from album
-   * @param albumId
-   * @param filename
-   * @returns
-   */
-  @Get(':id/media/:filename')
-  async getFile(
-    @Param(new ValidationPipe({ transform: true }))
-    params: IdParamDto,
-    @Res() res: Response
-  ) {
-    try {
-      const { id, filename } = params;
-      const file = await this.uploadService.getFile(filename, [id]);
-      res.end(file);
-    } catch (error) {
-      console.error('Error retrieving file:', error);
-      res.status(500).send('Error retrieving file');
-    }
-  }
-
-  /**
-   * ------------------------------ get media stream from album
-   * @param albumId
-   * @param filename
-   * @returns
-   */
-  @Get(':id/filestream/:filename')
-  async getFileStream(
-    @Param(new ValidationPipe({ transform: true }))
-    params: IdParamDto,
-    @Res() res: Response
-  ) {
-    try {
-      const { id, filename } = params;
-      const file = await this.uploadService.getFileStream(filename, [id]);
-      res.end(file);
-    } catch (error) {
-      console.error('Error retrieving file:', error);
-      res.status(500).send('Error retrieving file');
-    }
   }
 
   /**
