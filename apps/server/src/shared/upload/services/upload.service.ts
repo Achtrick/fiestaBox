@@ -11,6 +11,7 @@ import FfmpegCommand from 'fluent-ffmpeg';
 import ffmpegPath from 'ffmpeg-static';
 import { Request, Response } from 'express';
 import { Media } from '../../../modules/medias/entities/media.schema';
+import { Readable } from 'stream';
 
 export interface MediaUploadOptions {
   /** e.g. 'albums/1234' or 'profiles/5678' */
@@ -149,6 +150,10 @@ export class UploadService {
 
     const afterFolderIndex = index + folderName.length;
     return fullPath.substring(afterFolderIndex).replace(/^\/|\\/, ''); // remove leading slash/backslash
+  }
+
+  async downloadFilesAsZip(filePaths: string[]): Promise<Readable> {
+    return this.storageProvider.downloadFilesAsZip(filePaths);
   }
 
   async getFiles(filePaths: string[]): Promise<Buffer[]> {

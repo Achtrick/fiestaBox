@@ -8,6 +8,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { File } from 'multer';
+import archiver from 'archiver';
+import { Readable } from 'stream';
 
 @Injectable()
 export class DiskStorageProvider implements StorageProvider {
@@ -42,6 +44,27 @@ export class DiskStorageProvider implements StorageProvider {
       size: file.size,
       mimetype: file.mimetype,
     };
+  }
+
+  downloadFilesAsZip(filePaths: string[]): archiver.Archiver {
+    // create the archive
+    const archive = archiver.create('zip', { zlib: { level: 9 } });
+
+    // if there's any archiver‐level error, bubble it up
+    archive.on('error', (err) => {
+      throw err;
+    });
+
+    // append each file
+    for (const filePath of filePaths) {
+      const fileName = path.basename(filePath);
+      archive.file(filePath, { name: fileName });
+    }
+
+    // signal that we’ve added everything
+    archive.finalize();
+
+    return archive;
   }
 
   async getFiles(filePaths: string[]): Promise<Buffer[]> {

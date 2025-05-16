@@ -1,5 +1,6 @@
 import { ReadStream } from 'fs';
 import { File } from 'multer';
+import { Readable } from 'stream';
 
 export interface UploadedFile {
   originalname: string;
@@ -16,5 +17,6 @@ export interface StorageProvider {
     options?: { start: number; end: number }
   ): Promise<ReadStream>;
   deleteFile(filename: string): Promise<boolean>;
+  downloadFilesAsZip(filePaths: string[]): Promise<Readable>;
   ensureDirectoryExist(destination: string): void;
 }
