@@ -1,10 +1,14 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { BaseService } from '../../shared/generic-apis/service/base.service';
 import { BaseRepository } from '../../shared/generic-apis/repositories/base.repository';
 import { Media } from './entities/media.schema';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { UploadService } from '../../shared/upload/services/upload.service';
 import { Readable } from 'stream';
 import { UPLOAD_FOLDER } from '../../shared/upload/constants/upload.constants';
@@ -26,7 +30,7 @@ export class MediasService extends BaseService<Media> {
    * @param res
    * @returns
    */
-  async stream(mediaId: string, req: any, res: Response): Promise<void> {
+  async stream(mediaId: string, req: Request, res: Response): Promise<void> {
     const media = await this.findById(mediaId);
     if (!media) {
       //|| !userHasAccess(req.user, media)) {
@@ -40,7 +44,7 @@ export class MediasService extends BaseService<Media> {
     const idsAsObjectKeys = ids.map((id) => new Types.ObjectId(id));
     const medias = await this.findAll({ _id: { $in: idsAsObjectKeys } });
     if (!medias) {
-      throw new ForbiddenException('no Media were found');
+      throw new NotFoundException('no Media were found');
     }
 
     const paths = medias.map((media) =>
@@ -48,5 +52,20 @@ export class MediasService extends BaseService<Media> {
     );
 
     return this.uploadService.downloadFilesAsZip(paths);
+  }
+
+  async downloadSingleFile(id: string, res: Response): Promise<void> {
+    const media = await this.findById(id);
+    if (!media) {
+      throw new NotFoundException(`no Media dound with this id: ${id}`);
+    }
+
+    return this.uploadService.downloadSingle(
+      media.path,
+      media.mimeType,
+      media.size,
+      media.filename,
+      res
+    );
   }
 }

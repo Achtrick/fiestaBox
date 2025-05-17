@@ -156,6 +156,39 @@ export class UploadService {
     return this.storageProvider.downloadFilesAsZip(filePaths);
   }
 
+  async downloadSingle(
+    filePath: string,
+    mediaMimeType: string,
+    mediaSize: number,
+    mediaFileName: string,
+    res: Response
+  ) {
+    if (!filePath) {
+      throw new BadRequestException(
+        'You must provide a filePath query parameter'
+      );
+    }
+
+    // 1️⃣ Resolve absolute path
+    const resolvedPath = join(__dirname, `${UPLOAD_FOLDER}/${filePath}`);
+
+    await this.storageProvider.ensureFileExist(resolvedPath);
+
+    // 3️⃣ Determine a MIME type (fallback to octet-stream)
+    const mimeType = mediaMimeType || 'application/octet-stream';
+
+    // 4️⃣ Set headers
+    res.set({
+      'Content-Type': mimeType,
+      'Content-Length': mediaSize,
+      'Content-Disposition': `attachment; filename="${mediaFileName}"`,
+    });
+
+    // 5️⃣ Pipe the read stream to response
+    const fileStream = await this.storageProvider.getFileStream(resolvedPath);
+    fileStream.pipe(res);
+  }
+
   async getFiles(filePaths: string[]): Promise<Buffer[]> {
     return this.storageProvider.getFiles(filePaths);
   }

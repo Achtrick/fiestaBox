@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   StorageProvider,
   UploadedFile,
@@ -9,7 +9,6 @@ import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { File } from 'multer';
 import archiver from 'archiver';
-import { Readable } from 'stream';
 
 @Injectable()
 export class DiskStorageProvider implements StorageProvider {
@@ -97,6 +96,18 @@ export class DiskStorageProvider implements StorageProvider {
   ensureDirectoryExist(destination: string): void {
     if (!fs.existsSync(destination)) {
       fs.mkdirSync(destination, { recursive: true });
+    }
+  }
+
+  async ensureFileExist(path: string): Promise<void> {
+    let stat: fs.Stats;
+    try {
+      stat = await fs.promises.stat(path);
+      if (!stat.isFile()) {
+        throw new Error();
+      }
+    } catch {
+      throw new BadRequestException('File not found or not a file');
     }
   }
 }

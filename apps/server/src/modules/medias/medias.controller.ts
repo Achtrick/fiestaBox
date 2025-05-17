@@ -26,4 +26,12 @@ export class MediasController {
 
     zipStream.pipe(res);
   }
+
+  @Get(':mediaId/download')
+  async downloadSingle(
+    @Param('mediaId') mediaId: string,
+    @Res() res: Response
+  ) {
+    this.mediaService.downloadSingleFile(mediaId, res);
+  }
 }

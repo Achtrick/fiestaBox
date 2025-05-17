@@ -19,4 +19,5 @@ export interface StorageProvider {
   deleteFile(filename: string): Promise<boolean>;
   downloadFilesAsZip(filePaths: string[]): Promise<Readable>;
   ensureDirectoryExist(destination: string): void;
+  ensureFileExist(destination: string): void;
 }
