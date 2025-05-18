@@ -17,11 +17,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   template: `
     <div #container class="toast-container">
       <div #content class="toast-content">
-        @if(Array.isArray(message)){ @for (m of message; track $index) {
-        {{ message }}<br />
-        } } @else{
         {{ message }}
-        }
       </div>
     </div>
   `,

@@ -9,18 +9,35 @@
         (input)="FormHelper.onInput(this, $event)"
         placeholder="email"
         name="email"
+        type="email"
         class="default-input"
         required
       />
-      <input
-        (input)="FormHelper.onInput(this, $event)"
-        placeholder="password"
-        name="password"
-        [type]="showPassword ? 'text' : 'password'"
-        class="default-input"
-        required
-      />
-      <button class="default-button" type="submit">login</button>
+      <div class="row">
+        <input
+          (input)="FormHelper.onInput(this, $event)"
+          placeholder="password"
+          name="password"
+          [type]="showPassword() ? 'text' : 'password'"
+          class="default-input"
+          required
+        />
+        @if (showPassword()) {
+        <svg-icon
+          [svgName]="'hidePassword'"
+          (click)="togglePasswordVisibility()"
+        ></svg-icon>
+        } @else {
+        <svg-icon
+          [svgName]="'showPassword'"
+          (click)="togglePasswordVisibility()"
+        ></svg-icon>
+        }
+      </div>
+      <button class="default-button" type="submit" [disabled]="loading()">
+        @if (loading()) {<svg-icon [svgName]="'loading'"></svg-icon
+        >}@else{login}
+      </button>
     </form>
   </div>
   <p>

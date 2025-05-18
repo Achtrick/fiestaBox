@@ -38,4 +38,28 @@ export class AuthService {
       this.router.navigate(['/']);
     }
   }
+
+  public async signup(body: {
+    name: string;
+    phone: string;
+    email: string;
+    password: string;
+  }): Promise<void> {
+    const res = await this.coreDataService.ExecuteRequest<{ token: string }>(
+      'POST',
+      'auth/signup',
+      body,
+      true
+    );
+
+    if (res.success) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  public logout = (): void => {
+    localStorage.removeItem('userInfo');
+    this.isAuthenticated.set(false);
+    this.router.navigate(['/login']);
+  };
 }

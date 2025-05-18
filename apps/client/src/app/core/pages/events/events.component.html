@@ -1,7 +1,7 @@
 <div class="events-container">
   <div class="content">
     @for (event of events; track $index) {
-    <div class="card" [routerLink]="['/albums/', event._id]">
+    <div class="card" [routerLink]="['/albums/', event._id.toString()]">
       <img [src]="event.coverPhoto" [alt]="event.name" />
       <div class="overlay">
         <p>{{ event.name }}</p>

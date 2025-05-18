@@ -80,6 +80,10 @@ export class FloatingWidgetComponent {
   @ViewChild('widget') widget: ElementRef<HTMLElement>;
 
   visible: ModelSignal<boolean> = model(false);
+  animationDisabled: InputSignal<boolean> = input(false);
+  width: InputSignal<string> = input();
+  left: InputSignal<string> = input();
+  bottom: InputSignal<string> = input();
   widgetItems: InputSignal<FloatingWidgetItem[]> = input([]);
 
   constructor() {
@@ -96,6 +100,18 @@ export class FloatingWidgetComponent {
       if (widget) {
         widget.style.opacity = '1';
         widget.style.bottom = '80px';
+        if (this.animationDisabled()) {
+          widget.style.animation = 'none';
+        }
+        if (this.left()) {
+          widget.style.left = this.left();
+        }
+        if (this.bottom()) {
+          widget.style.bottom = this.bottom();
+        }
+        if (this.width()) {
+          widget.style.width = this.width();
+        }
       }
     }, 0);
   }

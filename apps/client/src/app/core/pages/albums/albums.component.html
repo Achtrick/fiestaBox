@@ -4,7 +4,7 @@
     <div
       [title]="album.name"
       class="folder"
-      [routerLink]="['/gallery/', getEventId(), album._id]"
+      [routerLink]="['/gallery/', getEventId(), album._id.toString()]"
       (longPress)="openContextMenu($event, album._id)"
     >
       <svg-icon [svgName]="'album'" [color]="album.color"></svg-icon>

@@ -2,14 +2,65 @@
   <img src="circle.svg" alt="circle" />
   <img src="circle.svg" alt="circle" />
   <div class="content">
-    <form>
+    <form (submit)="signup($event)">
       <h1>Sign up</h1>
       <p>Please sign up in to continue.</p>
-      <input placeholder="name" class="default-input" />
-      <input placeholder="email" class="default-input" />
-      <input placeholder="password" class="default-input" />
-      <input placeholder="confirm password" class="default-input" />
-      <button class="default-button">sign up</button>
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="name"
+        name="name"
+        class="default-input"
+        required
+      />
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="phone"
+        name="phone"
+        type="tel"
+        class="default-input"
+        required
+      />
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="email"
+        name="email"
+        type="email"
+        class="default-input"
+        required
+      />
+      <div class="row">
+        <input
+          (input)="FormHelper.onInput(this, $event)"
+          placeholder="password"
+          name="password"
+          [type]="showPassword() ? 'text' : 'password'"
+          class="default-input"
+          required
+        />
+        @if (showPassword()) {
+        <svg-icon
+          [svgName]="'hidePassword'"
+          (click)="togglePasswordVisibility()"
+        ></svg-icon>
+        } @else {
+        <svg-icon
+          [svgName]="'showPassword'"
+          (click)="togglePasswordVisibility()"
+        ></svg-icon>
+        }
+      </div>
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="confirm password"
+        name="confirmPassword"
+        [type]="showPassword() ? 'text' : 'password'"
+        class="default-input"
+        required
+      />
+      <button class="default-button" type="submit" [disabled]="loading()">
+        @if (loading()) {<svg-icon [svgName]="'loading'"></svg-icon>}@else{sign
+        up}
+      </button>
     </form>
   </div>
   <p>

@@ -2,7 +2,7 @@
   width: calc(100% - 10px);
   left: 5px;
   bottom: 5px;
-  padding: 0px 20px;
+  padding: 0px 10px;
   border-radius: 2rem;
   display: flex;
   align-items: center;
@@ -17,7 +17,21 @@
     color: var(--SecondaryColor);
     display: flex;
     align-items: center;
+    margin: 10px 0px;
 
+    .user-icon {
+      background-color: white;
+      width: 45px;
+      height: 45px;
+      padding: 5px;
+      margin-right: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+
+      svg-icon {
+        fill: none;
+      }
+    }
     .badge {
       background-color: var(--SecondaryColor);
       width: 30px;

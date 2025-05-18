@@ -59,6 +59,27 @@
         align-self: flex-end;
         margin-top: 10px;
       }
+      .row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        input {
+          width: 100%;
+        }
+        ::ng-deep svg-icon {
+          margin-left: -30px;
+          height: 25px;
+          width: 25px;
+          cursor: pointer;
+
+          .icon {
+            svg {
+              fill: none;
+            }
+          }
+        }
+      }
     }
   }
   > p {
