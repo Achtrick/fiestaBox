@@ -3,6 +3,24 @@
   padding: 20px;
   position: relative;
 
+  svg-icon {
+    width: 100%;
+    height: calc(100dvh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ::ng-deep .icon {
+      width: 100px;
+      height: 100px;
+
+      circle,
+      path {
+        fill: inherit;
+        stroke: inherit;
+      }
+    }
+  }
   .content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -72,7 +90,6 @@
         left: 5px;
         width: 15px;
         height: 15px;
-        opacity: 0.8;
         border-radius: 50%;
         backdrop-filter: blur(5px);
       }

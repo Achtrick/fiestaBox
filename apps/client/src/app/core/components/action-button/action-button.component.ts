@@ -1,27 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
   selector: 'action-button',
   template: `
     <button
       class="default-button"
-      [ngStyle]="ActionButton.getStyles(actionButton)"
-      (click)="actionButton.action ? actionButton.action() : null"
-      [attr.form]="actionButton.formId"
-      [type]="actionButton.formId ? 'submit' : 'button'"
+      [ngStyle]="ActionButton.getStyles(actionButton())"
+      (click)="actionButton().action ? actionButton().action() : null"
+      [attr.form]="actionButton().formId"
+      [type]="actionButton().formId ? 'submit' : 'button'"
+      [disabled]="actionButton().disabled"
     >
-      {{ actionButton.text }}
+      @if(actionButton().loading){<svg-icon [svgName]="'loading'"></svg-icon
+      >}@else{ {{ actionButton().text }} }
     </button>
   `,
   styles: `
   button{
     font-size: 12px;
   }`,
-  imports: [CommonModule],
+  imports: [CommonModule, SvgIconComponent],
 })
 export class ActionButtonComponent implements OnInit {
-  @Input() actionButton: ActionButton;
+  public actionButton = input<ActionButton>();
 
   protected ActionButton = ActionButton;
 
@@ -36,6 +39,7 @@ export class ActionButton {
   backgroundColor?: string = '#000000';
   width?: string = '';
   height?: string = '';
+  loading?: boolean = false;
   disabled?: boolean = false;
   formId?: string;
   action?: (() => void) | (() => Promise<void>) = () => {};

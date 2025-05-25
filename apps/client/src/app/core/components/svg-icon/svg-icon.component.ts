@@ -27,7 +27,7 @@ import { IconRegistry } from '../../../app.component';
          width:inherit;
          height:inherit;
          fill:inherit;
-         
+
          path{
            fill:inherit;
          }

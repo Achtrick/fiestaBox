@@ -69,4 +69,12 @@
     font-size: 13px;
     margin-left: 10px;
   }
+  ::ng-deep svg-icon {
+    width: 50px;
+    circle,
+    path {
+      fill: var(--PrimaryColor);
+      stroke: var(--PrimaryColor);
+    }
+  }
 }

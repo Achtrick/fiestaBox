@@ -10,6 +10,7 @@ import {
   PopupAnimation,
   PopupComponent,
 } from '../../components/popup/popup.component';
+import { SvgIconComponent } from '../../components/svg-icon/svg-icon.component';
 import { ToolbarComponent } from '../../components/toolbar/toolbar.component';
 import { EventTypeColorPipe } from '../../pipes/event-type-color.pipe';
 
@@ -22,12 +23,15 @@ import { EventTypeColorPipe } from '../../pipes/event-type-color.pipe';
     EventFormComponent,
     ToolbarComponent,
     EventTypeColorPipe,
+    SvgIconComponent,
   ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
   public events: WritableSignal<Events[]> = signal([]);
+  public loading: WritableSignal<boolean> = signal(true);
+  public actionLoading: WritableSignal<boolean> = signal(false);
   public Action = Action;
   public action: WritableSignal<Action> = signal(undefined);
   public actionTitle: WritableSignal<string> = signal('');
@@ -38,8 +42,15 @@ export class EventsComponent {
   constructor(private eventService: EventService) {}
 
   async ngOnInit(): Promise<void> {
+    await this.getEvents();
+  }
+
+  public async getEvents(): Promise<void> {
+    this.clearAction();
+    this.loading.set(true);
     const data = await this.eventService.geEvents();
     this.events.set(data);
+    this.loading.set(false);
   }
 
   public clearAction = (): void => {
@@ -127,5 +138,17 @@ export class EventsComponent {
 
   public loadDefaultImage(e: Event): void {
     (e.target as HTMLImageElement).src = 'event-placeholder.webp';
+  }
+
+  public onFormSubmit(): void {
+    this.actionLoading.set(true);
+  }
+
+  public async onFormExecuted(e: { success: boolean }): Promise<void> {
+    this.actionLoading.set(false);
+
+    if (e.success) {
+      await this.getEvents();
+    }
   }
 }

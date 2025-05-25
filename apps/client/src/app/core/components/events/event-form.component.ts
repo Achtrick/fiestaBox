@@ -22,7 +22,8 @@ export class EventFormComponent {
   @Input() action: Action = Action.ADD;
   @Input() event: Event = { ...new Event(), type: EventType.FREE };
 
-  public onSuccess = output<boolean>();
+  public onSubmit = output<void>();
+  public onExecuted = output<{ success: boolean }>();
 
   public eventTypes = EventTypes;
   public FormHelper = FormHelper;
@@ -32,13 +33,12 @@ export class EventFormComponent {
 
   public async persistEventData(e: SubmitEvent): Promise<void> {
     e.preventDefault();
-
+    this.onSubmit.emit();
     this.event.userId = new Types.ObjectId(this.appStore.userInfo().userId);
 
     switch (this.action) {
       case Action.ADD:
-        const success = await this.eventService.addEvent(this.event);
-        success && this.onSuccess.emit(success);
+        await this.addEvent();
         break;
       case Action.UPDATE:
         break;
@@ -46,6 +46,11 @@ export class EventFormComponent {
       default:
         break;
     }
+  }
+
+  private async addEvent(): Promise<void> {
+    const success = await this.eventService.addEvent(this.event);
+    success && this.onExecuted.emit({ success: success });
   }
 
   public setEventType(type: EventType): void {

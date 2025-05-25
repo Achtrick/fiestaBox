@@ -15,12 +15,13 @@ import {
   ActionButton,
   ActionButtonComponent,
 } from '../action-button/action-button.component';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
   selector: 'popup',
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.scss'],
-  imports: [CommonModule, ActionButtonComponent],
+  imports: [CommonModule, ActionButtonComponent, SvgIconComponent],
 })
 export class PopupComponent implements OnInit, OnChanges {
   @ViewChild('overlay', { static: true }) overlay: ElementRef<HTMLElement>;
@@ -29,6 +30,7 @@ export class PopupComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: true }) content: ElementRef<HTMLElement>;
 
   @Input() visible: boolean = false;
+  @Input() loading: boolean = false;
   @Input() animation: PopupAnimation = PopupAnimation.FadeIn;
   @Input() title: string = '';
   @Input() showCloseBtn: boolean = true;

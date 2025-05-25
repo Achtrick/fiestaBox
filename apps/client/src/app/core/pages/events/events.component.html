@@ -1,6 +1,10 @@
 <div class="events-container">
+  @if(loading()){
+  <svg-icon [svgName]="'loading'" color="var(--PrimaryColor)"></svg-icon>
+  } @else {
   <div class="content">
     @for (event of events(); track $index) {
+
     <div class="card" [routerLink]="['/albums/', event._id.toString()]">
       <img
         [src]="event.coverPhoto"
@@ -24,8 +28,10 @@
         [style.backgroundColor]="event.type | eventTypeColor"
       ></div>
     </div>
+
     }
   </div>
+  }
 
   <popup
     [visible]="!!action()"
@@ -35,9 +41,13 @@
     [height]="'auto'"
     [title]="actionTitle()"
     [actionButtons]="actionButtons()"
+    [loading]="actionLoading()"
   >
     @switch (action()) { @case (Action.ADD) {
-    <event-form (onSuccess)="action.set(undefined)"></event-form>
+    <event-form
+      (onSubmit)="onFormSubmit()"
+      (onExecuted)="onFormExecuted($event)"
+    ></event-form>
     } @case (Action.UPDATE) {
     <event-form [action]="Action.UPDATE" [event]="selectedEvent()"></event-form>
     } @case (Action.DELETE) {} }

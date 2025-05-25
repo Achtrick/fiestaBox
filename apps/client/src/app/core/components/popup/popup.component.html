@@ -13,9 +13,11 @@
     <div #content class="popup-content"><ng-content></ng-content></div>
     @if (actionButtons.length) {
     <div class="popup-controls">
-      @for (button of actionButtons; track $index) {
+      @if(loading){
+      <svg-icon svgName="loading"></svg-icon>
+      } @else{ @for (button of actionButtons; track $index) {
       <action-button [actionButton]="button"></action-button>
-      }
+      } }
     </div>
     }
   </div>

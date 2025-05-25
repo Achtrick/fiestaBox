@@ -30,7 +30,8 @@ export class FormHelper {
 }
 
 export class ConvertHelper {
-  public static toLocaleDate(date: Date): string {
+  public static toLocaleDate(value: Date): string {
+    const date = new Date(value);
     return date.toISOString().split('T')[0];
   }
 
