@@ -1,17 +1,23 @@
 <div class="events-container">
   <div class="content">
-    @for (event of events; track $index) {
+    @for (event of events(); track $index) {
     <div class="card" [routerLink]="['/albums/', event._id.toString()]">
-      <img [src]="event.coverPhoto" [alt]="event.name" />
+      <img
+        [src]="event.coverPhoto"
+        (error)="loadDefaultImage($event)"
+        [alt]="event.name"
+      />
       <div class="overlay">
         <p>{{ event.name }}</p>
         <p>{{ event.startDate | date }}</p>
       </div>
       <div class="actions">
-        <button class="default-button" (click)="deleteEvent($event)">
+        <button class="default-button" (click)="deleteEvent($event, event)">
           delete
         </button>
-        <button class="default-button" (click)="editEvent($event)">edit</button>
+        <button class="default-button" (click)="editEvent($event, event)">
+          edit
+        </button>
       </div>
       <div
         class="badge"
@@ -31,9 +37,9 @@
     [actionButtons]="actionButtons()"
   >
     @switch (action()) { @case (Action.ADD) {
-    <event-form></event-form>
+    <event-form (onSuccess)="action.set(undefined)"></event-form>
     } @case (Action.UPDATE) {
-    <event-form></event-form>
+    <event-form [action]="Action.UPDATE" [event]="selectedEvent()"></event-form>
     } @case (Action.DELETE) {} }
   </popup>
 
@@ -42,6 +48,6 @@
     [actionTitle]="'New Event'"
     [actionIcon]="'fa-solid fa-circle-plus'"
     [action]="addEvent"
-    [badgeCount]="events.length"
+    [badgeCount]="events().length"
   ></toolbar>
 </div>

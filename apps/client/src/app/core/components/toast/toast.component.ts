@@ -11,11 +11,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { DomHelper } from '../../../helpers/helpers';
 
 @Component({
   selector: 'toast',
   template: `
-    <div #container class="toast-container">
+    <div
+      #container
+      class="toast-container"
+      [style.zIndex]="DomHelper.getMaxZIndex()"
+    >
       <div #content class="toast-content">
         {{ message }}
       </div>
@@ -69,6 +74,7 @@ export class ToastComponent implements OnInit, OnDestroy, OnChanges {
   public ToastPosition = ToastPosition;
   public ToastType = ToastType;
   public Array = Array;
+  public DomHelper = DomHelper;
 
   private _visible: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _animate: BehaviorSubject<boolean> = new BehaviorSubject(false);

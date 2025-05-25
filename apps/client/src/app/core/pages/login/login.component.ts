@@ -17,8 +17,10 @@ export class LoginComponent {
 
   public loading: WritableSignal<boolean> = signal(false);
   public showPassword: WritableSignal<boolean> = signal(false);
+  public currentView: WritableSignal<View> = signal(View.Login);
 
   public FormHelper = FormHelper;
+  public View = View;
 
   constructor(protected router: Router, private authService: AuthService) {}
 
@@ -34,7 +36,29 @@ export class LoginComponent {
     this.loading.set(false);
   }
 
+  public async forgotPassword(e: SubmitEvent): Promise<void> {
+    e.preventDefault();
+    this.loading.set(true);
+
+    await this.authService.forgotPassword({
+      email: this.email,
+    });
+
+    this.loading.set(false);
+  }
+
   public togglePasswordVisibility(): void {
     this.showPassword.update((value) => !value);
   }
+
+  public switchView(view: View): void {
+    this.currentView.update((_) => (_ = view));
+    this.email = '';
+    this.password = '';
+  }
+}
+
+export enum View {
+  Login,
+  ForgotPassword,
 }

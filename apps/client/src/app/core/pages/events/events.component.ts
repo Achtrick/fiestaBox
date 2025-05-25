@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EventType, IEventDto } from '@dto-interfaces';
-import { Types } from 'mongoose';
 import { Action } from '../../../models/Action.model';
+import { Event as Events } from '../../../models/Event.model';
+import { EventService } from '../../../services/event.service';
 import { ActionButton } from '../../components/action-button/action-button.component';
 import { EventFormComponent } from '../../components/events/event-form.component';
 import {
@@ -27,49 +27,24 @@ import { EventTypeColorPipe } from '../../pipes/event-type-color.pipe';
   styleUrl: './events.component.scss',
 })
 export class EventsComponent {
-  public events: IEventDto[] = [
-    {
-      userId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
-      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
-      name: 'Startup Meetup',
-      coverPhoto:
-        'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400',
-      startDate: new Date('2025-06-10'),
-      type: EventType.FREE,
-      description: '---',
-    },
-    {
-      userId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
-      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
-      name: 'Developer Bootcamp',
-      coverPhoto:
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400',
-      startDate: new Date('2025-07-01'),
-      type: EventType.GOLD,
-      description: '---',
-    },
-    {
-      userId: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
-      _id: new Types.ObjectId('a3f91c6e2b4d8a7f1e0c9b52'),
-      name: 'Cybersecurity Workshop',
-      coverPhoto:
-        'https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400',
-      startDate: new Date('2025-09-12'),
-      type: EventType.FREE,
-      description: '---',
-    },
-  ];
+  public events: WritableSignal<Events[]> = signal([]);
   public Action = Action;
-  public action: WritableSignal<Action> = signal(null);
+  public action: WritableSignal<Action> = signal(undefined);
   public actionTitle: WritableSignal<string> = signal('');
-  public PopupAnimation = PopupAnimation;
   public actionButtons: WritableSignal<ActionButton[]> = signal([]);
+  public selectedEvent: WritableSignal<Events> = signal(undefined);
+  public PopupAnimation = PopupAnimation;
 
-  constructor() {}
+  constructor(private eventService: EventService) {}
+
+  async ngOnInit(): Promise<void> {
+    const data = await this.eventService.geEvents();
+    this.events.set(data);
+  }
 
   public clearAction = (): void => {
     this.actionButtons.set([]);
-    this.action.set(null);
+    this.action.set(undefined);
   };
 
   public addEvent = (e: MouseEvent): void => {
@@ -96,14 +71,38 @@ export class EventsComponent {
     ]);
   };
 
-  public editEvent(e: MouseEvent): void {
+  public editEvent(e: MouseEvent, event: Events): void {
     e.stopPropagation();
+
+    this.selectedEvent.set(event);
+
     this.action.set(Action.UPDATE);
     this.actionTitle.set('Edit event');
+    this.actionButtons.set([
+      {
+        text: 'cancel',
+        width: '100px',
+        height: '35px',
+        backgroundColor: 'var(--SecondaryColor)',
+        color: 'var(--PrimaryColor)',
+        action: this.clearAction,
+      },
+      {
+        text: 'confirm',
+        width: '100px',
+        height: '35px',
+        backgroundColor: 'var(--PrimaryColor)',
+        color: 'var(--SecondaryColor)',
+        formId: 'events-form',
+      },
+    ]);
   }
 
-  public deleteEvent(e: MouseEvent): void {
+  public deleteEvent(e: MouseEvent, event: Events): void {
     e.stopPropagation();
+
+    this.selectedEvent.set(event);
+
     this.action.set(Action.DELETE);
     this.actionTitle.set('Sure you want to delete this event ?');
     this.actionButtons.set([
@@ -124,5 +123,9 @@ export class EventsComponent {
         action: () => alert('event canceled'),
       },
     ]);
+  }
+
+  public loadDefaultImage(e: Event): void {
+    (e.target as HTMLImageElement).src = 'event-placeholder.webp';
   }
 }

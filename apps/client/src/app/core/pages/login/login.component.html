@@ -1,6 +1,7 @@
 <div class="login-container">
   <img src="circle.svg" alt="circle" />
   <img src="circle.svg" alt="circle" />
+  @if(currentView() === View.Login){
   <div class="content">
     <form (submit)="login($event)">
       <h1>Login</h1>
@@ -40,8 +41,39 @@
       </button>
     </form>
   </div>
-  <p>
-    Don't have an account ?
-    <a routerLink="/register">Sign up.</a>
-  </p>
+  <div class="links">
+    <p>
+      Don't have an account ?
+      <a routerLink="/register">Sign up.</a>
+    </p>
+    <p>
+      Forgot your password ?
+      <a (click)="switchView(View.ForgotPassword)">Reset password.</a>
+    </p>
+  </div>
+  } @else {
+  <div class="content">
+    <form (submit)="forgotPassword($event)">
+      <h1>Forgot password</h1>
+      <p>Please enter your email to continue.</p>
+      <input
+        (input)="FormHelper.onInput(this, $event)"
+        placeholder="email"
+        name="email"
+        type="email"
+        class="default-input"
+        required
+      />
+      <button class="default-button" type="submit" [disabled]="loading()">
+        @if (loading()) {<svg-icon [svgName]="'loading'"></svg-icon
+        >}@else{confirm}
+      </button>
+    </form>
+  </div>
+  <div class="links">
+    <p>
+      <a (click)="switchView(View.Login)">Back to login.</a>
+    </p>
+  </div>
+  }
 </div>

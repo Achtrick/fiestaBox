@@ -1,27 +1,26 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserRole } from '@dto-interfaces';
 import { jwtDecode } from 'jwt-decode';
+import {
+  UserForgotPassword,
+  UserInfo,
+  UserLogin,
+  UserRegister,
+} from '../models/User.model';
+import { AppStore } from '../signal-stores/app.store';
 import { CoreDataService } from './core-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public userInfo: { token: string; role: UserRole } = JSON.parse(
-    localStorage.getItem('userInfo')
-  );
-
-  public isAuthenticated: WritableSignal<boolean> = signal<boolean>(
-    !!this.userInfo
-  );
-
   constructor(
     private coreDataService: CoreDataService,
+    private appStore: AppStore,
     private router: Router
   ) {}
 
-  public async login(body: { email: string; password: string }): Promise<void> {
+  public async login(body: UserLogin): Promise<void> {
     const res = await this.coreDataService.ExecuteRequest<{ token: string }>(
       'POST',
       'auth/login',
@@ -31,21 +30,20 @@ export class AuthService {
 
     if (res.success) {
       const token = res.data['token'];
-      const userInfo = { token: token, role: jwtDecode(token)['role'] };
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-      this.isAuthenticated.set(true);
-      this.router.navigate(['/']);
+      const userInfo = new UserInfo();
+
+      userInfo.token = token;
+      userInfo.userId = jwtDecode(token)['userId'];
+      userInfo.email = jwtDecode(token)['email'];
+      userInfo.role = jwtDecode(token)['role'];
+
+      this.appStore.setUserInfo(userInfo);
     }
   }
 
-  public async signup(body: {
-    name: string;
-    phone: string;
-    email: string;
-    password: string;
-  }): Promise<void> {
-    const res = await this.coreDataService.ExecuteRequest<{ token: string }>(
+  public async signup(body: UserRegister): Promise<void> {
+    const res = await this.coreDataService.ExecuteRequest(
       'POST',
       'auth/signup',
       body,
@@ -58,8 +56,10 @@ export class AuthService {
   }
 
   public logout = (): void => {
-    localStorage.removeItem('userInfo');
-    this.isAuthenticated.set(false);
-    this.router.navigate(['/login']);
+    this.appStore.clearUserInfo();
   };
+
+  public async forgotPassword(body: UserForgotPassword): Promise<void> {
+    // waiting for api
+  }
 }

@@ -1,17 +1,58 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { IEventDto } from '@dto-interfaces';
+import { Component, Input, output } from '@angular/core';
+import { EventType } from '@dto-interfaces';
+import { Types } from 'mongoose';
+import { ConvertHelper, FormHelper } from '../../../helpers/helpers';
+import { Action } from '../../../models/Action.model';
+import { Event, EventTypes } from '../../../models/Event.model';
+import { EventService } from '../../../services/event.service';
+import { AppStore } from '../../../signal-stores/app.store';
+import {
+  ChangeEvent,
+  ImgUploaderComponent,
+} from '../file-uploader/file-uploader.component';
 
 @Component({
   selector: 'event-form',
-  imports: [CommonModule],
+  imports: [CommonModule, ImgUploaderComponent],
   templateUrl: './event-form.component.html',
   styleUrl: './event-form.component.scss',
 })
 export class EventFormComponent {
-  @Input() event: IEventDto;
-  public persistEventData(e: SubmitEvent): void {
+  @Input() action: Action = Action.ADD;
+  @Input() event: Event = { ...new Event(), type: EventType.FREE };
+
+  public onSuccess = output<boolean>();
+
+  public eventTypes = EventTypes;
+  public FormHelper = FormHelper;
+  public ConvertHelper = ConvertHelper;
+
+  constructor(private eventService: EventService, private appStore: AppStore) {}
+
+  public async persistEventData(e: SubmitEvent): Promise<void> {
     e.preventDefault();
+
+    this.event.userId = new Types.ObjectId(this.appStore.userInfo().userId);
+
+    switch (this.action) {
+      case Action.ADD:
+        const success = await this.eventService.addEvent(this.event);
+        success && this.onSuccess.emit(success);
+        break;
+      case Action.UPDATE:
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  public setEventType(type: EventType): void {
+    this.event.type = type;
+  }
+
+  public async imgChange(e: ChangeEvent): Promise<void> {
     console.log(e);
   }
 }

@@ -1,13 +1,42 @@
 <form id="events-form" (submit)="persistEventData($event)">
-  <input class="default-input" type="text" placeholder="title" />
-  <input class="default-input" type="date" placeholder="date" />
-  <textarea class="default-input" placeholder="description"></textarea>
   <input
-    id="file"
-    hidden
     class="default-input"
-    type="file"
-    placeholder="cover"
+    type="text"
+    placeholder="name"
+    (input)="FormHelper.onInput(this, $event)"
+    [value]="event.name ?? ''"
+    name="event.name"
+    required
   />
-  <img [src]="" />
+  <input
+    class="default-input"
+    type="date"
+    placeholder="date"
+    (input)="FormHelper.onInput(this, $event)"
+    [value]="event.startDate ? ConvertHelper.toLocaleDate(event.startDate) : ''"
+    name="event.startDate"
+    required
+  />
+  <div class="event-types">
+    @for(type of eventTypes; track $index){
+    <p
+      [class]="type"
+      [class.selected]="type === event.type"
+      (click)="setEventType(type)"
+    >
+      {{ type }}
+    </p>
+    }
+  </div>
+  <textarea
+    class="default-input"
+    placeholder="description"
+    (input)="FormHelper.onInput(this, $event)"
+    [value]="event.description ?? ''"
+    name="event.description"
+  ></textarea>
+  <img-uploader
+    [imgUrl]="event.coverPhoto"
+    (onChange)="imgChange($event)"
+  ></img-uploader>
 </form>

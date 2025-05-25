@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AppStore } from '../signal-stores/app.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private appStore: AppStore, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const isLoggedIn = this.authService.isAuthenticated();
+    const isLoggedIn = this.appStore.isAuthenticated();
     const allowIfAuthenticated = route.data['allowIfAuthenticated'] ?? true;
 
     if (isLoggedIn && !allowIfAuthenticated) {

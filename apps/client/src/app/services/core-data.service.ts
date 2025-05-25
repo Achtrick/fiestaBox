@@ -36,7 +36,10 @@ export class CoreDataService {
       res = error?.error as IResponse<T>;
     }
 
-    if (showMessages === true || (showMessages as Function)(res)) {
+    if (
+      showMessages &&
+      (showMessages === true || (showMessages as Function)(res))
+    ) {
       this.showMessages<T>(res);
     }
 

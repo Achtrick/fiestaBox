@@ -82,16 +82,19 @@
       }
     }
   }
-  > p {
-    color: #838383;
-    font-weight: 500;
-    font-size: 15px;
+  .links {
     position: absolute;
     bottom: 30px;
 
-    a {
-      cursor: pointer;
-      color: var(--PrimaryColor);
+    p {
+      color: #838383;
+      font-weight: 500;
+      font-size: 15px;
+
+      a {
+        cursor: pointer;
+        color: var(--PrimaryColor);
+      }
     }
   }
 }
